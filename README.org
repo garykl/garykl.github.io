@@ -1,6 +1,9 @@
 * garykl.github.io
 Musings on software development
 
+** TODO foto
+   There has to be a foto and a nice way to place it. It must be on the CV page and added as a footer on each blog post.
+
 ** TODO category tag
    There shall be a document attribute ~garykl-categories~ and a
    script that reads those. A specific ~docinfo-header.html~ is
