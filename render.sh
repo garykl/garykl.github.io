@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+# python 3.12 is needed, due to generic type syntax
+python3.12 scripts/main.py
+
+# categories and posts are rendered
+asciidoctor -r asciidoctor-diagram -a stylesheet=style.css -a stylesdir=$(pwd) -a docinfodir=$(pwd)/docinfo -a docinfo=shared-footer,private-header posts/*.adoc categories/*.adoc

@@ -1,0 +1,6 @@
+:nofooter:
+:creation-date: 12/27/2023
+:categories: book review, data, design
+= Definition of a data product
+
+This post is a mixture of a book review of `Data Management at Scale` and how it is related to the definition of a data product.

@@ -1,0 +1,4 @@
+= deliberation
+
+xref:../posts/confine-data-production-patterns.adoc[confine-data-production-patterns.adoc]
+

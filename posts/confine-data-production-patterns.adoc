@@ -1,0 +1,4 @@
+:nofooter:
+:creation-date: 12/28/2023
+:categories: design, data, deliberation
+= Confining data production patterns from code design patterns

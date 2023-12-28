@@ -1,0 +1,6 @@
+= design
+
+xref:../posts/data-product-definition.adoc[data-product-definition.adoc]
+
+xref:../posts/confine-data-production-patterns.adoc[confine-data-production-patterns.adoc]
+

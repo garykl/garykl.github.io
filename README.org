@@ -4,13 +4,6 @@ Musings on software development
 ** TODO foto
    There has to be a foto and a nice way to place it. It must be on the CV page and added as a footer on each blog post.
 
-** TODO category tag
-   There shall be a document attribute ~garykl-categories~ and a
-   script that reads those. A specific ~docinfo-header.html~ is
-   created for each document that shows all categories.
+** TODO time series overview pages
    
-** TODO category page
-   For each category found in the previous script, an adoc file is
-   created that contains links to the articles that contain the
-   category. The ~docinfo-header.html~ shall contain links, instead of
-   just text.
+** TODO extract nice link names from page titles

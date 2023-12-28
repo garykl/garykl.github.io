@@ -1,0 +1,4 @@
+= book review
+
+xref:../posts/data-product-definition.adoc[data-product-definition.adoc]
+
