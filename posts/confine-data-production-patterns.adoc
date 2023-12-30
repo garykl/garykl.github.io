@@ -1,4 +1,36 @@
 :nofooter:
 :creation-date: 12/28/2023
 :categories: design, data, deliberation
-= Confining data production patterns from code design patterns
+:source-highlighter: rouge
+:rouge-style: monokai
+:toc:
+= Data production design patterns and code design patterns
+
+Using reftext attribute:
+
+The reftext attribute instructs the AsciiDoc processor to use the reftext of the target element (e.g., section, block, list item, etc.) as the link text instead of explicitly specifying a label. For example, consider the following AsciiDoc code:
+AsciiDoc
+
+[xref:example.adoc#example-id[Example File with reftext]]
+
+Use code with caution. Learn more
+
+In this example, the example.adoc#example-id part specifies the target file and the anchor ID. The reftext attribute [Example File with reftext] tells the AsciiDoc processor to use the reftext of the target element, which might be "Example Section" or "Example Paragraph," as the link text. The actual label will depend on the content of the target file.
+
+Using id attribute:
+
+If you want to specify a custom link text without using the reftext attribute, you can use the id attribute along with the xref macro. This allows you to provide a label that is independent of the reftext of the target element. For instance, consider the following AsciiDoc code:
+
+[source, python]
+----
+import sys
+print(sys.argv)
+
+def lala(arg: str) -> None:
+  pass
+----
+
+== Also to mention: second level headers
+
+If you want to specify a custom link text without using the reftext attribute, you can use the id attribute along with the xref macro. This allows you to provide a label that is independent of the reftext of the target element. For instance, consider the following AsciiDoc code:
+If you want to specify a custom link text without using the reftext attribute, you can use the id attribute along with the xref macro. This allows you to provide a label that is independent of the reftext of the target element. For instance, consider the following AsciiDoc code:

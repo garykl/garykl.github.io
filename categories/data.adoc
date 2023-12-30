@@ -1,6 +1,9 @@
+:nofooter:
 = data
 
-xref:../posts/data-product-definition.adoc[data-product-definition.adoc]
+== 2023, December
 
-xref:../posts/confine-data-production-patterns.adoc[confine-data-production-patterns.adoc]
+xref:../posts/data-product-definition.adoc[Definition of a data product]
+
+xref:../posts/confine-data-production-patterns.adoc[Data production design patterns and code design patterns]
 

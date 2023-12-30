@@ -1,4 +1,7 @@
+:nofooter:
 = deliberation
 
-xref:../posts/confine-data-production-patterns.adoc[confine-data-production-patterns.adoc]
+== 2023, December
+
+xref:../posts/confine-data-production-patterns.adoc[Data production design patterns and code design patterns]
 

@@ -1,4 +1,7 @@
+:nofooter:
 = book review
 
-xref:../posts/data-product-definition.adoc[data-product-definition.adoc]
+== 2023, December
+
+xref:../posts/data-product-definition.adoc[Definition of a data product]
 

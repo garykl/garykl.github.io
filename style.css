@@ -1,11 +1,80 @@
 @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";
-@import "https://cdn.jsdelivr.net/gh/asciidoctor/asciidoctor@2.0/data/stylesheets/asciidoctor-default.css";
+
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+
+body {
+  background: rgb(36, 36, 36);
+  font-family: "Noto Serif","DejaVu Serif",serif;
+}
+
+a {
+  color: #614209
+}
+
+.garykl-frame {
+  background: linear-gradient(to bottom, rgb(36, 36, 36), rgb(36, 36, 36));
+}
+
+.categories {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #d3d3d3;
+  background: #444;
+  border-left: 4px solid #c3c3c3;
+  border-right: 4px solid #c3c3c3;
+}
+
+.category {
+  color: rgb(228, 193, 97)
+}
+
+#header {
+  font-family:"Open Sans","DejaVu Sans",sans-serif;
+}
+
+#toc {
+  padding: 1em;
+  border: 2px inset rgb(83, 83, 83);
+}
+
+#toctitle {
+  display: none;
+}
+
+ul {
+  list-style-type: square;
+}
+
+#header, #content {
+  border-left: 4px solid #c3c3c3;
+  border-right: 4px solid #c3c3c3;
+  background: rgb(189, 182, 163)
+}
+
+
+.categories, #header, #footer, #content {
+  width: 70%;
+  max-width: 62.5em;
+  position: relative;
+  padding: .9375em;
+  text-align: justify;
+  margin: 0 auto;
+}
+
+.listingblock {
+  font-size: 1.2.em;
+}
+
+.listingblock > .content > pre {
+  padding: 1em;
+  border: 1px solid #d3d3d3;
+}
 
 h1, h2, h3, h4, h5, h6, #toctitle,
 .sidebarblock > .content > .title {
   color: rgba(0, 0, 0, 0.8);
 }
 
-.category {
-  color: rgb(4, 112, 4)
+h1 {
+  color: rgba(27, 26, 39, 0.8);
 }

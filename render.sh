@@ -4,4 +4,5 @@
 python3.12 scripts/main.py
 
 # categories and posts are rendered
-asciidoctor -r asciidoctor-diagram -a stylesheet=style.css -a stylesdir=$(pwd) -a docinfodir=$(pwd)/docinfo -a docinfo=shared-footer,private-header posts/*.adoc categories/*.adoc
+asciidoctor -a stylesheet=style.css -a stylesdir=$(pwd) -a docinfodir=$(pwd)/docinfo -a docinfo=private-footer,private-header posts/*.adoc
+asciidoctor -a stylesheet=style.css -a stylesdir=$(pwd) -a docinfodir=$(pwd)/docinfo -a docinfo=private-footer,private-header categories/*.adoc *.adoc
