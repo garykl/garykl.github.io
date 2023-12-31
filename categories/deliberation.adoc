@@ -1,7 +1,9 @@
 :nofooter:
+:source-highlighter: rouge
+:rouge-style: monokai
 = deliberation
 
 == 2023, December
 
-xref:../posts/confine-data-production-patterns.adoc[Data production design patterns and code design patterns]
+xref:../posts/confine-data-production-patterns.adoc[Data production design patterns and code design patterns] `[design, data, deliberation]`
 

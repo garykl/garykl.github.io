@@ -1,9 +1,11 @@
 :nofooter:
+:source-highlighter: rouge
+:rouge-style: monokai
 = design
 
 == 2023, December
 
-xref:../posts/data-product-definition.adoc[Definition of a data product]
+xref:../posts/data-product-definition.adoc[Definition of a data product] `[book review, data, design]`
 
-xref:../posts/confine-data-production-patterns.adoc[Data production design patterns and code design patterns]
+xref:../posts/confine-data-production-patterns.adoc[Data production design patterns and code design patterns] `[design, data, deliberation]`
 

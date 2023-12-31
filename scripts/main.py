@@ -79,20 +79,20 @@ def find_all_post_files() -> Iterable[AdocFile]:
             yield AdocFile(filename)
 
 
+def format_category_for_html(cat: str, is_in_root: bool) -> str:
+    category_file: str = os.path.join(CATEGORY_FOLDER, f'{cat}.html')
+    return f'<a href="{'.' if is_in_root else '..'}/{category_file}" class="category">{cat}</a>'
 
-def write_docinfo(file: AdocFile, categories: Iterable[str]):
-
-    def integrate_category(cat: str) -> str:
-        category_file: str = os.path.join(CATEGORY_FOLDER, f'{cat}.html')
-        return f'<a href="../{category_file}" class="category">{cat}</a>'
+def write_docinfo(file: AdocFile, categories: Iterable[str], is_in_root: bool):
 
     def write_to_handle(handle: TextIOWrapper):
         handle.write('<div class="garykl-frame">\n')
         handle.write('<div class="categories">\n')
-        handle.write('<b>Musings on Software Development</b> by Gary Klindt<br>\n')
+        handle.write('<h3>Musings on Software Development</h3>\n')
         handle.write(f'Post from {file.creation_date.strftime('%B %d, %Y')}<br>\n')
         handle.write('Categories: ')
-        handle.writelines(",\n".join([integrate_category(category) for category in categories]))
+        handle.writelines(",\n".join([format_category_for_html(category, is_in_root) for category in categories]))
+        handle.write('<br>\nby Gary Klindt\n')
         handle.write('</div>\n')
         handle.write('</div>\n')
 
@@ -100,13 +100,16 @@ def write_docinfo(file: AdocFile, categories: Iterable[str]):
         with open(path, 'w') as handle:
             write_to_handle(handle)
 
-
-def write_plain_docinfo(filename: str):
+def write_plain_docinfo(filename: str, categories: Iterable[str], is_in_root: bool):
 
     def write_to_handle(handle: TextIOWrapper):
         handle.write('<div class="garykl-frame">\n')
         handle.write('<div class="categories">\n')
-        handle.write('<b>Musings on Software Development</b> by Gary Klindt<br>\n')
+        handle.write('<h3>Musings on Software Development</h3>\n')
+        handle.write(f'Blog last updated on {datetime.now().strftime('%B %d, %Y')}<br>\n')
+        handle.write('Available categories: ')
+        handle.writelines(",\n".join([format_category_for_html(category, is_in_root) for category in categories]))
+        handle.write('<br>\nby Gary Klindt\n')
         handle.write('</div>\n')
         handle.write('</div>\n')
 
@@ -124,13 +127,15 @@ def write_adoc_list_file(filename: str, title: str, input_files: Iterable[AdocFi
     sorted_files = sorted(input_files, key=lambda file: file.creation_date)
     with open(filename, 'w') as handle:
         handle.write(':nofooter:\n')
+        handle.write(':source-highlighter: rouge\n')
+        handle.write(':rouge-style: monokai\n')
         handle.write(f'= {title}\n\n')
 
         grouped_files = itertools.groupby(sorted_files, key=lambda file: format_date(file.creation_date))
         for key, group in grouped_files:
             handle.write(f'== {key}\n\n')
             for file in group:
-                handle.write(f'xref:{'.' if is_in_root else '..'}/{file.path}[{file.title}]\n\n')
+                handle.write(f'xref:{'.' if is_in_root else '..'}/{file.path}[{file.title}] `[{', '.join(file.categories)}]`\n\n')
 
 
 def write_category_file(category: str, files: Iterable[AdocFile]) -> str:
@@ -157,10 +162,11 @@ if __name__ == '__main__':
 
     category_files = CategoryFiles()
     adoc_files = list(find_all_post_files())
+    all_categories: Iterable[str] = [c for file in adoc_files for c in file.categories]
 
     for adoc_file in adoc_files:
         if adoc_file.categories is not None:
-            write_docinfo(adoc_file, adoc_file.categories)
+            write_docinfo(adoc_file, adoc_file.categories, is_in_root=False)
 
             for category in adoc_file.categories:
                 category_files.add_file(category, adoc_file)
@@ -170,7 +176,7 @@ if __name__ == '__main__':
 
     for category, files in category_files.files.items():
         category_file = write_category_file(category, files)
-        write_plain_docinfo(category_file)
+        write_plain_docinfo(category_file, all_categories, is_in_root=False)
 
     index_file = write_index_file(adoc_files)
-    write_plain_docinfo(index_file)
+    write_plain_docinfo(index_file, all_categories, is_in_root=True)

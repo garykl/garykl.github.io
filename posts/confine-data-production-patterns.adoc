@@ -9,7 +9,7 @@
 Using reftext attribute:
 
 The reftext attribute instructs the AsciiDoc processor to use the reftext of the target element (e.g., section, block, list item, etc.) as the link text instead of explicitly specifying a label. For example, consider the following AsciiDoc code:
-AsciiDoc
+AsciiDoc and an `inline source test`.
 
 [xref:example.adoc#example-id[Example File with reftext]]
 

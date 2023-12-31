@@ -1,7 +1,9 @@
 :nofooter:
+:source-highlighter: rouge
+:rouge-style: monokai
 = book review
 
 == 2023, December
 
-xref:../posts/data-product-definition.adoc[Definition of a data product]
+xref:../posts/data-product-definition.adoc[Definition of a data product] `[book review, data, design]`
 
