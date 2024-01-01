@@ -4,6 +4,12 @@ Musings on software development
 ** TODO foto
    There has to be a foto and a nice way to place it. It must be on the CV page and added as a footer on each blog post.
 
-** TODO time series overview pages
    
-** TODO extract nice link names from page titles
+** Ideas for posts
+
+  
+*** Book reviews
+    
+**** TODO Data Management at Scale
+
+*** TODO Clean code principles for data
