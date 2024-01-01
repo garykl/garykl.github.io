@@ -1,4 +1,6 @@
 :categories: design, data
 :creation-date: 01/01/2024
 :nofooter:
+:source-highlighter: rouge
+:rouge-style: monokai
 = Dummy post

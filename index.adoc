@@ -3,10 +3,6 @@
 :rouge-style: monokai
 = Available posts
 
-== 2023, December
-
-xref:./posts/data-product-definition.adoc[Definition of a data product] `[book review, data, design]`
-
 == 2024, January
 
 xref:./posts/dummy-post.adoc[Dummy post] `[design, data]`
