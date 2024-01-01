@@ -7,5 +7,7 @@
 
 xref:../posts/data-product-definition.adoc[Definition of a data product] `[book review, data, design]`
 
-xref:../posts/confine-data-production-patterns.adoc[Data production design patterns and code design patterns] `[design, data, deliberation]`
+== 2024, January
+
+xref:../posts/dummy-post.adoc[Dummy post] `[design, data]`
 

@@ -1,5 +1,9 @@
 #!/usr/bin/bash
 
+# there is no manually written .html
+rm *.html
+rm */*.html
+
 # python 3.12 is needed, due to generic type syntax
 python3.12 scripts/main.py
 

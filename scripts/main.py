@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from enum import unique
 from io import TextIOWrapper
 import itertools
 from multiprocessing import shared_memory
@@ -162,7 +163,7 @@ if __name__ == '__main__':
 
     category_files = CategoryFiles()
     adoc_files = list(find_all_post_files())
-    all_categories: Iterable[str] = [c for file in adoc_files for c in file.categories]
+    all_categories: Iterable[str] = sorted(set(c for file in adoc_files for c in file.categories))
 
     for adoc_file in adoc_files:
         if adoc_file.categories is not None:
