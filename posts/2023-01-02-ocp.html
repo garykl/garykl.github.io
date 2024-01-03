@@ -349,7 +349,7 @@ by Gary Klindt
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_motivation_and_definition">Motivation and definition</a></li>
+<li><a href="#_motivation_and_from_the_book">Motivation and from the book</a></li>
 <li><a href="#_strategy_against_ocp_violation">Strategy against OCP violation</a></li>
 <li><a href="#_change_systems_with_data_safely">Change systems with data safely</a></li>
 <li><a href="#_summary">Summary</a></li>
@@ -358,15 +358,16 @@ by Gary Klindt
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_motivation_and_definition">Motivation and definition</h2>
+<h2 id="_motivation_and_from_the_book">Motivation and from the book</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Can we learn from Clean Code when it comes to data? Compared to software, data is an inflexible beast. We must be very well prepared to cope with changes. Coping with changes is one of the specialties of Clean Code. I want to interprete the Clean Code practices and principles to data work, one by one. One of the principles that confuses people, a lot is the Open Closed principle. So how can code be open as well as closed?! Well, to answer this, we must step back a moment, and ask for the definition.</p>
+<p>Can we learn from <strong>Clean Code</strong> when it comes to working with data? Compared to software, data is flexible. Once there is data in a system, we cannot change it, just by changing code. To change data, code must be created to change it, and the data must be processed by that particular code. We must be very well prepared to cope with changes to data. Coping with changes is one of the specialties of Clean Code. I want to interprete Clean Code practices and principles to data work. One of the very important and confusing principles is the Open Closed principle. So how can code be open as well as closed?! Well, to answer this, we must step back a moment, and ask for the definition.</p>
 </div>
 <div class="paragraph">
 <p>The principle was coined by Bertrand Meyer in his book about object oriented programming <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>. The following statements are important to be able to judge, whether the following examples are expressions of the open closed principle, and to be able to make valid analogies when working with data.</p>
 </div>
-<div class="exampleblock">
+<div id="ocp" class="exampleblock">
+<div class="title">Example 1. Open Closed principle</div>
 <div class="content">
 <div class="paragraph">
 <p>Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.</p>
@@ -407,7 +408,7 @@ by Gary Klindt
 <h2 id="_strategy_against_ocp_violation">Strategy against OCP violation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The example code at a german Clean <a href="https://clean-code-developer.de">Code initiative web site</a> looks similar to the following one, beside s translation to german.</p>
+<p>There is a <a href="https://clean-code-developer.de">german website</a> that is dedicated to Clean Code. It contains a set of practices and principles, nicely arranged by difficulty to master, and put into relation to few basic qualities, e.g. evolvability. OCP is good at making your code evolvable. The following example is just a slight modifcation of the example of this website, such as translation to english. In this section, there is more explanation about the purpose and properties of OCP.</p>
 </div>
 <div class="paragraph">
 <p>First comes the code that is not OCP compliant.</p>
@@ -444,7 +445,10 @@ by Gary Klindt
 </div>
 </div>
 <div class="paragraph">
-<p>The code that is compliant to OCP follows. It can be obtained from the previous code sample by applying the refactoring to replace an enumeration by the strategy pattern.</p>
+<p>The class <code>NoOcpClientCode</code> is not part of the code under investigation. It is assumed that there is additional client code, such that all possible code lines thought the library code <code>LibraryCode</code> can occur.</p>
+</div>
+<div class="paragraph">
+<p>The code that is compliant to OCP can be obtained from the previous code sample by applying the refactoring to replace an enumeration by the strategy pattern.</p>
 </div>
 <div id="comply-ocp" class="listingblock">
 <div class="title">Listing 2. Code that will comply to OCP: FollowOcp.cs</div>
@@ -489,13 +493,28 @@ Did you see, how the cyclomatic complexity got reduced?
 </table>
 </div>
 <div class="paragraph">
-<p>It is probably always possible to invent an addition of functionality such that the corresponding code change is an alteration and not an addition, thus, breaking the Open Closed principle. Typically, we do not just invent new functionality, but there are requirements elicited, analyzed and planned. A requirement could be to allow a specific type of customer that gets very good pricess, but pay a minimum price in case the do not buy as much as we require them.</p>
+<p>Whether code complies to OCP or not shows itself when a new feature is added. Will we write a code block and add it to the code base? The we have OCP compliant code. Of course we can fake this argument, by just copying code, so I assume, we follow the DRY (Don&#8217;t Repeat Yourself) principle sufficiently well.</p>
+</div>
+<div class="paragraph">
+<p>So let&#8217;s test our code with a probe requirement. A probe requirement is a Gedankenexperiment to strengthen the design of our code. Allow a specific type of customer that gets very good pricess, but pay a minimum price in case the do not buy as much as we require them.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+In physics probe charges are used to determine the field strength of, for example, a magnetic field. The field itself cannot be seen, since it is an abstract concept that just explains phenomena, in the magnetic field example, the velocity of particles, considering high friction. It is tempting to compare the probe requirement with a probe charge. Then we can compare the OCP principle compliance with a field and the resulting velocities with characteristic code changes.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Showing the changed structure of <a href="#break-ocp">Listing 1</a>  gives the following.</p>
 </div>
 <div class="listingblock">
-<div class="title">Listing 3. Code did not follow OCP and needed to be changed invasively.</div>
+<div class="title">Listing 3. Code did not follow OCP and needed to be changed invasively: NoOcp.cs</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="cs"><span class="k">enum</span> <span class="n">CustomerType</span> <span class="p">{</span> <span class="n">PartnerCustomer</span><span class="p">,</span> <span class="n">OneTimeCustomer</span><span class="p">,</span> <span class="n">MinimumPriceCustomer</span> <span class="p">}</span>
 
@@ -518,13 +537,16 @@ Did you see, how the cyclomatic complexity got reduced?
 </div>
 </div>
 <div class="paragraph">
-<p>There are changes at three different positions. The enum has to be extended, the <code>switch</code> expression needs to be repaired, and what is worst: The <code>LibraryCode</code> class is added a constant, that is irrelevant to all previously existing code. The cohesion of this class just got reduced. Doing this change in a production environment can already produce a little shudder.</p>
+<p>There are changes at three different positions. The enum has to be extended, the <code>switch</code> expression needs to be repaired, and what is worst: The <code>LibraryCode</code> class is added a constant, that is irrelevant to all previously existing code. The cohesion of this class just got reduced.</p>
 </div>
 <div class="paragraph">
-<p>Better would be, if there would be just the addition of code at a single code location, like when extending the functionality of <a href="#comply-ocp">Listing 2</a>.</p>
+<p>Doing this change in a production environment can already produce a little shudder.</p>
+</div>
+<div class="paragraph">
+<p>Better would be, if code would just be added at a single code location, like when extending the functionality of <a href="#comply-ocp">Listing 2</a> as shown as follows:</p>
 </div>
 <div id="safe-extension" class="listingblock">
-<div class="title">Listing 4. Code followed OCP and code be extended safely.</div>
+<div class="title">Listing 4. Code followed OCP and code be extended safely: FollowOcp.cs</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="cs"><span class="k">class</span> <span class="nc">MinimumPriceCustomer</span> <span class="p">:</span> <span class="n">ICustomerPricing</span>
 <span class="p">{</span>
@@ -537,20 +559,50 @@ Did you see, how the cyclomatic complexity got reduced?
 <p>The cohesion of the existing structures is untouched and the cohesion of the new class is as it should be: High.</p>
 </div>
 <div class="paragraph">
-<p>As I wrote previously, code is not objectively OCP compliant or not. It very much depends on the actual change that we try to perform in terms of requirements. Consider, we wanted to add a discount on the number of articles that are bought. This requirement would be orthogonal to the existing customer types, and we probably would have needed to change the existing code of both, <a href="#break-ocp">Listing 1</a> as well as <a href="#comply-ocp">Listing 2</a>.</p>
+<p>The probe requirement that we used <strong>cannot</strong> be used to proof that code is OCP compliant. Consider the following probe requirement: Add a discount on the number of articles that are bought. Both, <a href="#break-ocp">Listing 1</a> as well as <a href="#comply-ocp">Listing 2</a> would be needed to change invasively. Generally speaking, code can never be totally OCP compliant, if it actually does something useful. It is probably always possible to invent an addition of functionality such that the corresponding code change is an alteration and not an addition, thus, breaking the Open Closed principle. So choose your probe requirements wisely, and take many of them.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_change_systems_with_data_safely">Change systems with data safely</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Data always has to be thought together with code. Data is created, changed and deleted by running code. Whether the code that manipulates data is OCP compliant or not has no effect on the data. What does it even mean that data is OCP compliant? For this, let&#8217;s try to specialize the general principle <a href="#ocp">Example 1</a> to data.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. OCP for data</div>
+<div class="content">
+<div class="paragraph">
+<p>Datasets should be open for extension, but closed for modification.</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Versioning</p>
+<p>A dataset will be said to be open if it is still available for extension. For example, it should be possible to add fields to the data structures it contains, or new elements to the set of functions it performs.</p>
 </li>
 <li>
-<p>Meta data in general</p>
+<p>A dataset will be said to be closed if it is available for use by other modules. This assumes that the module has been given a well-defined, stable description (the interface in the sense of information hiding).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It is not the dataset that has such properties, it is the data product: dataset + service that manages that data.Reference to Data Management at Scale.</p>
+</li>
+<li>
+<p>Versioning: data code must interprete versions, such that dataset can be extended, but the code can differentiate extensions from others.</p>
+</li>
+<li>
+<p>Meta data in general: In addition to version, there might be archive status or a reference to a newer version.</p>
+</li>
+<li>
+<p>References: Normalized data can be extended. Othere data can reference data, data can reference other data. If other data changes, more use can be made from this data.</p>
+</li>
+<li>
+<p>Code that interacts with data should have some properties: ignore when data structure suddenly contain more fields.</p>
 </li>
 </ul>
 </div>
@@ -560,10 +612,13 @@ Did you see, how the cyclomatic complexity got reduced?
 <h2 id="_summary">Summary</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Open Closed principle might help us identifying code that will not survive the drag of time. There are patterns readily available that support the OCP, such as the strategy pattern, or the usage of interfaces to delegate parts of the functionality to other code locations (Dependency Inversion principle). Such patterns contribute to better maintainability by reducing the cyclomatic complexity.</p>
+<p>The Open Closed principle might help us identifying code that will not survive the drag of time. There are patterns readily available that support the OCP, such as the strategy pattern, or the usage of interfaces to delegate parts of the functionality to other code locations (Dependency Inversion principle). Such patterns contribute to better maintainability by reducing the cyclomatic complexity. The design hardens since code cohesion improves.</p>
 </div>
 <div class="paragraph">
-<p>Breaking OCP leads to the unsettling situation that changes have to be done at multiple code locations. This obviously is the default situation. Very often it is possible, though, to first refactor the code with simple refactorings into a OCP compliant state, such that features can be added in a similarly safe way as in <a href="#safe-extension">Listing 4</a>.</p>
+<p>Breaking OCP leads to the unsettling situation that changes have to be done at multiple code locations. With feature distributed across many code locations, the probability that unit tests cover each case decreases. This situation is the default! Very often it is possible, though, to first refactor the code with simple refactorings into an OCP compliant state, such that features can be added in a similarly safe way as in <a href="#safe-extension">Listing 4</a>.</p>
+</div>
+<div class="paragraph">
+<p>Practically working with OCP means to to Gedankenexperiments by mentally applying probe requirements. Best those requirements are realistic and even have a chance to be planned. If requirements can be implemented effortlessly, the probability increases significantly that a product manager decides to <em>buy</em> it.</p>
 </div>
 <div class="paragraph">
 <p>For data, the refactoring trick cannot be applied, because once data is flowing around in a system, it cannot easily be changed.</p>
