@@ -1,11 +1,9 @@
 :nofooter:
 :source-highlighter: rouge
 :rouge-style: monokai
-= data
+= clean code
 
 == 2024, January
-
-xref:../posts/dummy-post.adoc[Dummy post] `[design, data]`
 
 xref:../posts/2023-01-02-ocp.adoc[Open Closed principle on Data] `[design, clean code, data, principle]`
 

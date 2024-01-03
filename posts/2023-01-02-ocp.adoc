@@ -1,0 +1,162 @@
+:nofooter:
+:creation-date: 01/02/2024
+:categories: design, clean code, data, principle
+:source-highlighter: rouge
+:rouge-style: monokai
+:listing-caption: Listing
+:xrefstyle: short
+= Open Closed principle on Data
+:toc:
+
+== Motivation and definition
+
+Can we learn from Clean Code when it comes to data? Compared to software, data is an inflexible beast. We must be very well prepared to cope with changes. Coping with changes is one of the specialties of Clean Code. I want to interprete the Clean Code practices and principles to data work, one by one. One of the principles that confuses people, a lot is the Open Closed principle. So how can code be open as well as closed?! Well, to answer this, we must step back a moment, and ask for the definition.
+
+The principle was coined by Bertrand Meyer in his book about object oriented programming footnote:[Meyer, Bertrand (1988). Object-Oriented Software Construction. Prentice Hall. ISBN 0-13-629049-3.]. The following statements are important to be able to judge, whether the following examples are expressions of the open closed principle, and to be able to make valid analogies when working with data.
+
+[example]
+====
+Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.
+
+- A module will be said to be open if it is still available for extension. For example, it should be possible to add fields to the data structures it contains, or new elements to the set of functions it performs.
+- A module will be said to be closed if [it] is available for use by other modules. This assumes that the module has been given a well-defined, stable description (the interface in the sense of information hiding).
+====
+
+Let me try to rephrase:
+
+Open Requirement:: The functionality of existing code can be extended.
+Closed Requirement:: Existing code is not supposed to be changed.
+
+For our code base as a whole, we would like to add functionality by adding code, instead of altering existing code.
+
+== Strategy against OCP violation
+
+The example code at a german Clean link:https://clean-code-developer.de[Code initiative web site] looks similar to the following one, beside s translation to german.
+
+First comes the code that is not OCP compliant.
+
+[[break-ocp]]
+.Code that will break OCP: NoOcp.cs
+[source, cs]
+----
+namespace OcpExample;
+
+enum CustomerType { PartnerCustomer, OneTimeCustomer }
+
+static class LibraryCode
+{
+    const double PartnerDiscountFactor = 0.95;
+
+    public static double GetTotalPrice(CustomerType customerType, int amount, double price)
+    {
+        return customerType switch
+        {
+            CustomerType.OneTimeCustomer => amount * price,
+            CustomerType.PartnerCustomer => amount * price * PartnerDiscountFactor,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+}
+
+static class NoOcpClientCode
+{
+    public static void Behave()
+    {
+        Console.WriteLine(LibraryCode.GetTotalPrice(CustomerType.OneTimeCustomer, 3, 0.22));
+    }
+}
+----
+
+The code that is compliant to OCP follows. It can be obtained from the previous code sample by applying the refactoring to replace an enumeration by the strategy pattern.
+
+[[comply-ocp]]
+.Code that will comply to OCP: FollowOcp.cs
+[source, cs]
+----
+namespace OcpExample;
+
+interface ICustomerPricing
+{
+    double GetTotalPrice(int amount, double price);
+}
+
+class OneTimeCustomerPricing : ICustomerPricing
+{
+    public double GetTotalPrice(int amount, double price) => amount * price;
+}
+
+class PartnerCustomerPricing : ICustomerPricing
+{
+    const double PartnerDiscountFactor = 0.95;
+    public double GetTotalPrice(int amount, double price) => amount * price * PartnerDiscountFactor;
+}
+
+static class OcpClientCode
+{
+    public static void Behave()
+    {
+        Console.WriteLine(new OneTimeCustomerPricing().GetTotalPrice(3, 0.22));
+    }
+}
+----
+
+[NOTE]
+Did you see, how the cyclomatic complexity got reduced?
+
+It is probably always possible to invent an addition of functionality such that the corresponding code change is an alteration and not an addition, thus, breaking the Open Closed principle. Typically, we do not just invent new functionality, but there are requirements elicited, analyzed and planned. A requirement could be to allow a specific type of customer that gets very good pricess, but pay a minimum price in case the do not buy as much as we require them.
+
+Showing the changed structure of <<break-ocp>>  gives the following.
+
+.Code did not follow OCP and needed to be changed invasively.
+[source, cs]
+----
+enum CustomerType { PartnerCustomer, OneTimeCustomer, MinimumPriceCustomer }
+
+static class LibraryCode
+{
+    const double PartnerDiscountFactor = 0.95;
+    const double MinimumPrice = 1;
+
+    public static double GetTotalPrice(CustomerType customerType, int amount, double price)
+    {
+        return customerType switch
+        {
+            CustomerType.OneTimeCustomer => amount * price,
+            CustomerType.PartnerCustomer => amount * price * PartnerDiscountFactor,
+            CustomerType.MinimumPriceCustomer => new double [] {MinimumPrice, price * amount}.Max(),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+}
+----
+
+There are changes at three different positions. The enum has to be extended, the `switch` expression needs to be repaired, and what is worst: The `LibraryCode` class is added a constant, that is irrelevant to all previously existing code. The cohesion of this class just got reduced. Doing this change in a production environment can already produce a little shudder.
+
+Better would be, if there would be just the addition of code at a single code location, like when extending the functionality of <<comply-ocp>>.
+
+[[safe-extension]]
+.Code followed OCP and code be extended safely.
+[source, cs]
+----
+class MinimumPriceCustomer : ICustomerPricing
+{
+    const double MinimumPrice = 1;
+    public double GetTotalPrice(int amount, double price) => new double [] {MinimumPrice, price * amount}.Max();
+}
+----
+
+The cohesion of the existing structures is untouched and the cohesion of the new class is as it should be: High.
+
+As I wrote previously, code is not objectively OCP compliant or not. It very much depends on the actual change that we try to perform in terms of requirements. Consider, we wanted to add a discount on the number of articles that are bought. This requirement would be orthogonal to the existing customer types, and we probably would have needed to change the existing code of both, <<break-ocp>> as well as <<comply-ocp>>.
+
+== Change systems with data safely
+- Versioning
+- Meta data in general
+
+== Summary
+
+The Open Closed principle might help us identifying code that will not survive the drag of time. There are patterns readily available that support the OCP, such as the strategy pattern, or the usage of interfaces to delegate parts of the functionality to other code locations (Dependency Inversion principle). Such patterns contribute to better maintainability by reducing the cyclomatic complexity.
+
+Breaking OCP leads to the unsettling situation that changes have to be done at multiple code locations. This obviously is the default situation. Very often it is possible, though, to first refactor the code with simple refactorings into a OCP compliant state, such that features can be added in a similarly safe way as in <<safe-extension>>.
+
+For data, the refactoring trick cannot be applied, because once data is flowing around in a system, it cannot easily be changed.

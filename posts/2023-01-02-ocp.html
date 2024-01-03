@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.18">
+<title>Open Closed principle on Data</title>
+<style>
+@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";
+
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+
+body {
+  background: rgb(36, 36, 36);
+  font-family: "Noto Serif","DejaVu Serif",serif;
+}
+
+h1, h2, h3, h4, h5, h6, #toctitle,
+.sidebarblock > .content > .title {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+h1 {
+  color: rgba(27, 26, 39, 0.8);
+}
+
+ul {
+  list-style-type: square;
+}
+
+a {
+  color: #614209
+}
+
+.garykl-frame {
+  background: linear-gradient(to bottom, rgb(36, 36, 36), rgb(36, 36, 36));
+}
+
+.categories {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #d3d3d3;
+  background: #444;
+  border-left: 4px solid #c3c3c3;
+  border-right: 4px solid #c3c3c3;
+}
+
+.categories > h3 {
+  color: #d3d3d3;
+}
+
+.category {
+  color: rgb(189, 182, 163)
+}
+
+#header, .garykl-frame {
+  font-family:"Open Sans","DejaVu Sans",sans-serif;
+}
+
+#toc {
+  padding: 1em;
+  border: 2px inset rgb(83, 83, 83);
+}
+
+#toctitle {
+  display: none;
+}
+
+#header, #content, #footnotes {
+  border-left: 4px solid #c3c3c3;
+  border-right: 4px solid #c3c3c3;
+  background: rgb(216, 211, 197)
+}
+
+
+.categories, #header, #footer, #content, #footnotes {
+  width: 70%;
+  max-width: 62.5em;
+  position: relative;
+  padding: .9375em;
+  text-align: justify;
+  margin: 0 auto;
+}
+
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #c3c3c3;margin-bottom:1.25em;padding:1.25em;background:#d3d3d3;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+
+.exampleblock {
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+
+code {
+  font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;
+}
+
+
+.listingblock > .content > pre {
+  padding: 1em;
+  border: 1px solid #d3d3d3;
+  font-size: 0.9em
+}
+
+</style>
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .cm {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .c1 {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .cp {
+  color: #75715e;
+  font-weight: bold;
+}
+pre.rouge .cs {
+  color: #75715e;
+  font-weight: bold;
+  font-style: italic;
+}
+pre.rouge .err {
+  color: #960050;
+  background-color: #1e0010;
+}
+pre.rouge .gi {
+  color: #ffffff;
+  background-color: #324932;
+}
+pre.rouge .gd {
+  color: #ffffff;
+  background-color: #493131;
+}
+pre.rouge .ge {
+  color: #000000;
+  font-style: italic;
+}
+pre.rouge .gr {
+  color: #aa0000;
+}
+pre.rouge .gt {
+  color: #aa0000;
+}
+pre.rouge .gh {
+  color: #999999;
+}
+pre.rouge .go {
+  color: #888888;
+}
+pre.rouge .gp {
+  color: #555555;
+}
+pre.rouge .gs {
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #aaaaaa;
+}
+pre.rouge .k, pre.rouge .kv {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kc {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kd {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kp {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kr {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kt {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kn {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .ow {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .o {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .mf {
+  color: #ae81ff;
+}
+pre.rouge .mh {
+  color: #ae81ff;
+}
+pre.rouge .il {
+  color: #ae81ff;
+}
+pre.rouge .mi {
+  color: #ae81ff;
+}
+pre.rouge .mo {
+  color: #ae81ff;
+}
+pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
+  color: #ae81ff;
+}
+pre.rouge .se {
+  color: #ae81ff;
+}
+pre.rouge .sa {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .sb {
+  color: #e6db74;
+}
+pre.rouge .sc {
+  color: #e6db74;
+}
+pre.rouge .sd {
+  color: #e6db74;
+}
+pre.rouge .s2 {
+  color: #e6db74;
+}
+pre.rouge .sh {
+  color: #e6db74;
+}
+pre.rouge .si {
+  color: #e6db74;
+}
+pre.rouge .sx {
+  color: #e6db74;
+}
+pre.rouge .sr {
+  color: #e6db74;
+}
+pre.rouge .s1 {
+  color: #e6db74;
+}
+pre.rouge .ss {
+  color: #e6db74;
+}
+pre.rouge .s, pre.rouge .dl {
+  color: #e6db74;
+}
+pre.rouge .na {
+  color: #a6e22e;
+}
+pre.rouge .nc {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .nd {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .ne {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .no {
+  color: #66d9ef;
+}
+pre.rouge .bp {
+  color: #f8f8f2;
+}
+pre.rouge .nb {
+  color: #f8f8f2;
+}
+pre.rouge .ni {
+  color: #f8f8f2;
+}
+pre.rouge .nn {
+  color: #f8f8f2;
+}
+pre.rouge .vc {
+  color: #f8f8f2;
+}
+pre.rouge .vg {
+  color: #f8f8f2;
+}
+pre.rouge .vi {
+  color: #f8f8f2;
+}
+pre.rouge .nv, pre.rouge .vm {
+  color: #f8f8f2;
+}
+pre.rouge .w {
+  color: #f8f8f2;
+}
+pre.rouge .nl {
+  color: #f8f8f2;
+  font-weight: bold;
+}
+pre.rouge .nt {
+  color: #f92672;
+}
+pre.rouge {
+  color: #f8f8f2;
+  background-color: #49483e;
+}
+</style>
+</head>
+<body class="article">
+<div class="garykl-frame">
+<div class="categories">
+<h3>Musings on Software Development</h3>
+Post from January 02, 2024<br>
+Categories: <a href="../categories/design.html" class="category">design</a>,
+<a href="../categories/clean code.html" class="category">clean code</a>,
+<a href="../categories/data.html" class="category">data</a>,
+<a href="../categories/principle.html" class="category">principle</a><br>
+by Gary Klindt
+</div>
+</div>
+<div id="header">
+<h1>Open Closed principle on Data</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_motivation_and_definition">Motivation and definition</a></li>
+<li><a href="#_strategy_against_ocp_violation">Strategy against OCP violation</a></li>
+<li><a href="#_change_systems_with_data_safely">Change systems with data safely</a></li>
+<li><a href="#_summary">Summary</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_motivation_and_definition">Motivation and definition</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Can we learn from Clean Code when it comes to data? Compared to software, data is an inflexible beast. We must be very well prepared to cope with changes. Coping with changes is one of the specialties of Clean Code. I want to interprete the Clean Code practices and principles to data work, one by one. One of the principles that confuses people, a lot is the Open Closed principle. So how can code be open as well as closed?! Well, to answer this, we must step back a moment, and ask for the definition.</p>
+</div>
+<div class="paragraph">
+<p>The principle was coined by Bertrand Meyer in his book about object oriented programming <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>. The following statements are important to be able to judge, whether the following examples are expressions of the open closed principle, and to be able to make valid analogies when working with data.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A module will be said to be open if it is still available for extension. For example, it should be possible to add fields to the data structures it contains, or new elements to the set of functions it performs.</p>
+</li>
+<li>
+<p>A module will be said to be closed if [it] is available for use by other modules. This assumes that the module has been given a well-defined, stable description (the interface in the sense of information hiding).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Let me try to rephrase:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Open Requirement</dt>
+<dd>
+<p>The functionality of existing code can be extended.</p>
+</dd>
+<dt class="hdlist1">Closed Requirement</dt>
+<dd>
+<p>Existing code is not supposed to be changed.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>For our code base as a whole, we would like to add functionality by adding code, instead of altering existing code.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_strategy_against_ocp_violation">Strategy against OCP violation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The example code at a german Clean <a href="https://clean-code-developer.de">Code initiative web site</a> looks similar to the following one, beside s translation to german.</p>
+</div>
+<div class="paragraph">
+<p>First comes the code that is not OCP compliant.</p>
+</div>
+<div id="break-ocp" class="listingblock">
+<div class="title">Listing 1. Code that will break OCP: NoOcp.cs</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cs"><span class="k">namespace</span> <span class="nn">OcpExample</span><span class="p">;</span>
+
+<span class="k">enum</span> <span class="n">CustomerType</span> <span class="p">{</span> <span class="n">PartnerCustomer</span><span class="p">,</span> <span class="n">OneTimeCustomer</span> <span class="p">}</span>
+
+<span class="k">static</span> <span class="k">class</span> <span class="nc">LibraryCode</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">PartnerDiscountFactor</span> <span class="p">=</span> <span class="m">0.95</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">double</span> <span class="nf">GetTotalPrice</span><span class="p">(</span><span class="n">CustomerType</span> <span class="n">customerType</span><span class="p">,</span> <span class="kt">int</span> <span class="n">amount</span><span class="p">,</span> <span class="kt">double</span> <span class="n">price</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">customerType</span> <span class="k">switch</span>
+        <span class="p">{</span>
+            <span class="n">CustomerType</span><span class="p">.</span><span class="n">OneTimeCustomer</span> <span class="p">=&gt;</span> <span class="n">amount</span> <span class="p">*</span> <span class="n">price</span><span class="p">,</span>
+            <span class="n">CustomerType</span><span class="p">.</span><span class="n">PartnerCustomer</span> <span class="p">=&gt;</span> <span class="n">amount</span> <span class="p">*</span> <span class="n">price</span> <span class="p">*</span> <span class="n">PartnerDiscountFactor</span><span class="p">,</span>
+            <span class="n">_</span> <span class="p">=&gt;</span> <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentOutOfRangeException</span><span class="p">()</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="k">class</span> <span class="nc">NoOcpClientCode</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Behave</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">LibraryCode</span><span class="p">.</span><span class="nf">GetTotalPrice</span><span class="p">(</span><span class="n">CustomerType</span><span class="p">.</span><span class="n">OneTimeCustomer</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">0.22</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The code that is compliant to OCP follows. It can be obtained from the previous code sample by applying the refactoring to replace an enumeration by the strategy pattern.</p>
+</div>
+<div id="comply-ocp" class="listingblock">
+<div class="title">Listing 2. Code that will comply to OCP: FollowOcp.cs</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cs"><span class="k">namespace</span> <span class="nn">OcpExample</span><span class="p">;</span>
+
+<span class="k">interface</span> <span class="nc">ICustomerPricing</span>
+<span class="p">{</span>
+    <span class="kt">double</span> <span class="nf">GetTotalPrice</span><span class="p">(</span><span class="kt">int</span> <span class="n">amount</span><span class="p">,</span> <span class="kt">double</span> <span class="n">price</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">OneTimeCustomerPricing</span> <span class="p">:</span> <span class="n">ICustomerPricing</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">double</span> <span class="nf">GetTotalPrice</span><span class="p">(</span><span class="kt">int</span> <span class="n">amount</span><span class="p">,</span> <span class="kt">double</span> <span class="n">price</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">amount</span> <span class="p">*</span> <span class="n">price</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">PartnerCustomerPricing</span> <span class="p">:</span> <span class="n">ICustomerPricing</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">PartnerDiscountFactor</span> <span class="p">=</span> <span class="m">0.95</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">double</span> <span class="nf">GetTotalPrice</span><span class="p">(</span><span class="kt">int</span> <span class="n">amount</span><span class="p">,</span> <span class="kt">double</span> <span class="n">price</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">amount</span> <span class="p">*</span> <span class="n">price</span> <span class="p">*</span> <span class="n">PartnerDiscountFactor</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="k">class</span> <span class="nc">OcpClientCode</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Behave</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="k">new</span> <span class="nf">OneTimeCustomerPricing</span><span class="p">().</span><span class="nf">GetTotalPrice</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">0.22</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Did you see, how the cyclomatic complexity got reduced?
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>It is probably always possible to invent an addition of functionality such that the corresponding code change is an alteration and not an addition, thus, breaking the Open Closed principle. Typically, we do not just invent new functionality, but there are requirements elicited, analyzed and planned. A requirement could be to allow a specific type of customer that gets very good pricess, but pay a minimum price in case the do not buy as much as we require them.</p>
+</div>
+<div class="paragraph">
+<p>Showing the changed structure of <a href="#break-ocp">Listing 1</a>  gives the following.</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 3. Code did not follow OCP and needed to be changed invasively.</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cs"><span class="k">enum</span> <span class="n">CustomerType</span> <span class="p">{</span> <span class="n">PartnerCustomer</span><span class="p">,</span> <span class="n">OneTimeCustomer</span><span class="p">,</span> <span class="n">MinimumPriceCustomer</span> <span class="p">}</span>
+
+<span class="k">static</span> <span class="k">class</span> <span class="nc">LibraryCode</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">PartnerDiscountFactor</span> <span class="p">=</span> <span class="m">0.95</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">MinimumPrice</span> <span class="p">=</span> <span class="m">1</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">double</span> <span class="nf">GetTotalPrice</span><span class="p">(</span><span class="n">CustomerType</span> <span class="n">customerType</span><span class="p">,</span> <span class="kt">int</span> <span class="n">amount</span><span class="p">,</span> <span class="kt">double</span> <span class="n">price</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">customerType</span> <span class="k">switch</span>
+        <span class="p">{</span>
+            <span class="n">CustomerType</span><span class="p">.</span><span class="n">OneTimeCustomer</span> <span class="p">=&gt;</span> <span class="n">amount</span> <span class="p">*</span> <span class="n">price</span><span class="p">,</span>
+            <span class="n">CustomerType</span><span class="p">.</span><span class="n">PartnerCustomer</span> <span class="p">=&gt;</span> <span class="n">amount</span> <span class="p">*</span> <span class="n">price</span> <span class="p">*</span> <span class="n">PartnerDiscountFactor</span><span class="p">,</span>
+            <span class="n">CustomerType</span><span class="p">.</span><span class="n">MinimumPriceCustomer</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="kt">double</span> <span class="p">[]</span> <span class="p">{</span><span class="n">MinimumPrice</span><span class="p">,</span> <span class="n">price</span> <span class="p">*</span> <span class="n">amount</span><span class="p">}.</span><span class="nf">Max</span><span class="p">(),</span>
+            <span class="n">_</span> <span class="p">=&gt;</span> <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentOutOfRangeException</span><span class="p">()</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are changes at three different positions. The enum has to be extended, the <code>switch</code> expression needs to be repaired, and what is worst: The <code>LibraryCode</code> class is added a constant, that is irrelevant to all previously existing code. The cohesion of this class just got reduced. Doing this change in a production environment can already produce a little shudder.</p>
+</div>
+<div class="paragraph">
+<p>Better would be, if there would be just the addition of code at a single code location, like when extending the functionality of <a href="#comply-ocp">Listing 2</a>.</p>
+</div>
+<div id="safe-extension" class="listingblock">
+<div class="title">Listing 4. Code followed OCP and code be extended safely.</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cs"><span class="k">class</span> <span class="nc">MinimumPriceCustomer</span> <span class="p">:</span> <span class="n">ICustomerPricing</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">MinimumPrice</span> <span class="p">=</span> <span class="m">1</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">double</span> <span class="nf">GetTotalPrice</span><span class="p">(</span><span class="kt">int</span> <span class="n">amount</span><span class="p">,</span> <span class="kt">double</span> <span class="n">price</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="kt">double</span> <span class="p">[]</span> <span class="p">{</span><span class="n">MinimumPrice</span><span class="p">,</span> <span class="n">price</span> <span class="p">*</span> <span class="n">amount</span><span class="p">}.</span><span class="nf">Max</span><span class="p">();</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The cohesion of the existing structures is untouched and the cohesion of the new class is as it should be: High.</p>
+</div>
+<div class="paragraph">
+<p>As I wrote previously, code is not objectively OCP compliant or not. It very much depends on the actual change that we try to perform in terms of requirements. Consider, we wanted to add a discount on the number of articles that are bought. This requirement would be orthogonal to the existing customer types, and we probably would have needed to change the existing code of both, <a href="#break-ocp">Listing 1</a> as well as <a href="#comply-ocp">Listing 2</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_change_systems_with_data_safely">Change systems with data safely</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Versioning</p>
+</li>
+<li>
+<p>Meta data in general</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Open Closed principle might help us identifying code that will not survive the drag of time. There are patterns readily available that support the OCP, such as the strategy pattern, or the usage of interfaces to delegate parts of the functionality to other code locations (Dependency Inversion principle). Such patterns contribute to better maintainability by reducing the cyclomatic complexity.</p>
+</div>
+<div class="paragraph">
+<p>Breaking OCP leads to the unsettling situation that changes have to be done at multiple code locations. This obviously is the default situation. Very often it is possible, though, to first refactor the code with simple refactorings into a OCP compliant state, such that features can be added in a similarly safe way as in <a href="#safe-extension">Listing 4</a>.</p>
+</div>
+<div class="paragraph">
+<p>For data, the refactoring trick cannot be applied, because once data is flowing around in a system, it cannot easily be changed.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. Meyer, Bertrand (1988). Object-Oriented Software Construction. Prentice Hall. ISBN 0-13-629049-3.
+</div>
+</div>
+<div class="garykl-frame">
+<div class="categories">
+<h3>Musings on Software Development</h3>
+Post from January 02, 2024<br>
+Categories: <a href="../categories/design.html" class="category">design</a>,
+<a href="../categories/clean code.html" class="category">clean code</a>,
+<a href="../categories/data.html" class="category">data</a>,
+<a href="../categories/principle.html" class="category">principle</a><br>
+by Gary Klindt
+</div>
+</div>
+</body>
+</html>

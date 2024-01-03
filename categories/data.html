@@ -67,14 +67,14 @@ a {
   display: none;
 }
 
-#header, #content {
+#header, #content, #footnotes {
   border-left: 4px solid #c3c3c3;
   border-right: 4px solid #c3c3c3;
   background: rgb(216, 211, 197)
 }
 
 
-.categories, #header, #footer, #content {
+.categories, #header, #footer, #content, #footnotes {
   width: 70%;
   max-width: 62.5em;
   position: relative;
@@ -82,6 +82,26 @@ a {
   text-align: justify;
   margin: 0 auto;
 }
+
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #c3c3c3;margin-bottom:1.25em;padding:1.25em;background:#d3d3d3;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+
+.exampleblock {
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
 
 code {
   font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;
@@ -91,6 +111,7 @@ code {
 .listingblock > .content > pre {
   padding: 1em;
   border: 1px solid #d3d3d3;
+  font-size: 0.9em
 }
 
 </style>
@@ -99,9 +120,11 @@ code {
 <div class="garykl-frame">
 <div class="categories">
 <h3>Musings on Software Development</h3>
-Blog last updated on January 01, 2024<br>
-Available categories: <a href="../categories/data.html" class="category">data</a>,
-<a href="../categories/design.html" class="category">design</a><br>
+Blog last updated on January 03, 2024<br>
+Available categories: <a href="../categories/clean code.html" class="category">clean code</a>,
+<a href="../categories/data.html" class="category">data</a>,
+<a href="../categories/design.html" class="category">design</a>,
+<a href="../categories/principle.html" class="category">principle</a><br>
 by Gary Klindt
 </div>
 </div>
@@ -115,15 +138,20 @@ by Gary Klindt
 <div class="paragraph">
 <p><a href="../posts/dummy-post.html">Dummy post</a> <code>[design, data]</code></p>
 </div>
+<div class="paragraph">
+<p><a href="../posts/2023-01-02-ocp.html">Open Closed principle on Data</a> <code>[design, clean code, data, principle]</code></p>
+</div>
 </div>
 </div>
 </div>
 <div class="garykl-frame">
 <div class="categories">
 <h3>Musings on Software Development</h3>
-Blog last updated on January 01, 2024<br>
-Available categories: <a href="../categories/data.html" class="category">data</a>,
-<a href="../categories/design.html" class="category">design</a><br>
+Blog last updated on January 03, 2024<br>
+Available categories: <a href="../categories/clean code.html" class="category">clean code</a>,
+<a href="../categories/data.html" class="category">data</a>,
+<a href="../categories/design.html" class="category">design</a>,
+<a href="../categories/principle.html" class="category">principle</a><br>
 by Gary Klindt
 </div>
 </div>
