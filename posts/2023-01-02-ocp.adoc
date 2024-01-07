@@ -5,10 +5,10 @@
 :rouge-style: monokai
 :listing-caption: Listing
 :xrefstyle: short
-= Open Closed principle on Data
+= Synergetic design with the Open Closed principle (OCP)
 :toc:
 
-== Motivation and from the book
+== Simplified OCP by the book
 
 Can we learn from *Clean Code* when it comes to working with data? Compared to software, data is flexible. Once there is data in a system, we cannot change it, just by changing code. To change data, code must be created to change it, and the data must be processed by that particular code. We must be very well prepared to cope with changes to data. Coping with changes is one of the specialties of Clean Code. I want to interprete Clean Code practices and principles to data work. One of the very important and confusing principles is the Open Closed principle. So how can code be open as well as closed?! Well, to answer this, we must step back a moment, and ask for the definition.
 
@@ -26,8 +26,8 @@ Software entities (classes, modules, functions, etc.) should be open for extensi
 
 Let me try to rephrase:
 
-Open Requirement:: The functionality of existing code can be extended.
-Closed Requirement:: Existing code is not supposed to be changed.
+Open Code:: The functionality of existing code can be extended.
+Closed Code:: Existing code is not supposed to be changed.
 
 For our code base as a whole, we would like to add functionality by adding code, instead of altering existing code.
 
@@ -160,25 +160,34 @@ The cohesion of the existing structures is untouched and the cohesion of the new
 
 The probe requirement that we used *cannot* be used to proof that code is OCP compliant. Consider the following probe requirement: Add a discount on the number of articles that are bought. Both, <<break-ocp>> as well as <<comply-ocp>> would be needed to change invasively. Generally speaking, code can never be totally OCP compliant, if it actually does something useful. It is probably always possible to invent an addition of functionality such that the corresponding code change is an alteration and not an addition, thus, breaking the Open Closed principle. So choose your probe requirements wisely, and take many of them.
 
-== Change systems with data safely
+== Synergetic data changes
 
-Data always has to be thought together with code. Data is created, changed and deleted by running code. Whether the code that manipulates data is OCP compliant or not has no effect on the data. What does it even mean that data is OCP compliant? For this, let's try to specialize the general principle <<ocp>> to data.
+Data always has to be thought together with code. Data is created, changed and deleted by running code. Whether the code that manipulates data is OCP compliant or not has no effect on the data itself. What does it even mean that data is OCP compliant? For this, let's try to specialize the general principle <<ocp>> to data.
 
-.OCP for data
-[example]
-====
-Datasets should be open for extension, but closed for modification.
+Review the OCP statements.
 
-- A dataset will be said to be open if it is still available for extension. For example, it should be possible to add fields to the data structures it contains, or new elements to the set of functions it performs.
-- A dataset will be said to be closed if it is available for use by other modules. This assumes that the module has been given a well-defined, stable description (the interface in the sense of information hiding).
-====
+Open Code:: The functionality of existing code can be extended.
+Closed Code:: Existing code is not supposed to be modified.
 
-- It is not the dataset that has such properties, it is the data product: dataset + service that manages that data.Reference to Data Management at Scale.
-- Versioning: data code must interprete versions, such that dataset can be extended, but the code can differentiate extensions from others.
-- Meta data in general: In addition to version, there might be archive status or a reference to a newer version.
-- References: Normalized data can be extended. Othere data can reference data, data can reference other data. If other data changes, more use can be made from this data.
-- Code that interacts with data should have some properties: ignore when data structure suddenly contain more fields.
+For data, this might mean the following:
 
+Open Data:: The information of existing data can be extended.
+Closed Data:: Existing data is not supposed to be modified.
+
+[NOTE]
+Schemas can be database schema, explicitly defined schema in a schema registry, or implicitly defined schema by being able to let a piece of code process an instance of that schema without errors. The latter is the most general 'definition'.
+
+I believe that information is a good analog to functionality, since both represent the business/user perspective of data and code, respectively. We can define information of a data instance as the set of statements that we are able to formulate about the data considering its context. Then the following operations are *Data OCP*, considering that code changes to data schemas are implied.
+
+. Add an optional field is added to an existing data structure with a default. All existing instance of such a data schema get this new information.
+. Remove an existing field from a schema. That field in existing instance have no meaning anymore.
+. If data references other data, than its information can be extended by extending the other data schema. Such schema are not part of the schema of the referencing data, because the reference is represented as a key.
+
+[NOTE]
+It came to my mind that the implementation of DSLs are an interesting case for OCP and data. A variant of DSL actually stores the DSL code as data that is interpreted as code. It means that new functionality can be added to a system, without altering existing code at all! DSLs are Code OCP as well as Data OCP, since the new functionality is part of the data context, which potentially increases the information of existing data.
+
+[NOTE]
+By defining a meta data schema, that allows to set 'capabilities' to data instances, to dynamically determines their schema, it is possible to add new types, just by adding new data instances that have a new set of capabilities. With such a pattern in place, all the schema extensions that are listed in this section apply to the addition or removal of single data instances instead of just schema.
 
 == Summary
 
@@ -186,6 +195,6 @@ The Open Closed principle might help us identifying code that will not survive t
 
 Breaking OCP leads to the unsettling situation that changes have to be done at multiple code locations. With feature distributed across many code locations, the probability that unit tests cover each case decreases. This situation is the default! Very often it is possible, though, to first refactor the code with simple refactorings into an OCP compliant state, such that features can be added in a similarly safe way as in <<safe-extension>>.
 
-Practically working with OCP means to to Gedankenexperiments by mentally applying probe requirements. Best those requirements are realistic and even have a chance to be planned. If requirements can be implemented effortlessly, the probability increases significantly that a product manager decides to _buy_ it.
+Practically working with OCP means to to Gedankenexperiments by mentally applying probe requirements. Best those requirements are realistic and even have a chance to be planned during prioritzation. If requirements can be implemented effortlessly, the probability increases significantly that a product manager decides to _buy_ it.
 
-For data, the refactoring trick cannot be applied, because once data is flowing around in a system, it cannot easily be changed.
+The OCP interpreation for data is only possible by considering that datas context, which is the precondition for giving it information. Information of data can be modified by modifying schemas, which can be data itself.

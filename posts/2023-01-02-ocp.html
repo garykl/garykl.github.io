@@ -114,6 +114,22 @@ code {
   font-size: 0.9em
 }
 
+dt {
+  float: left;
+  clear: left;
+  text-align: right;
+  font-style: italic;
+  color: #444;
+  font-family:"Open Sans","DejaVu Sans",sans-serif;
+}
+dt::after {
+  content: ":";
+}
+dd {
+  margin: 0 0 0 110px;
+}
+
+
 </style>
 <style>
 pre.rouge table td { padding: 5px; }
@@ -351,7 +367,7 @@ by Gary Klindt
 <ul class="sectlevel1">
 <li><a href="#_motivation_and_from_the_book">Motivation and from the book</a></li>
 <li><a href="#_strategy_against_ocp_violation">Strategy against OCP violation</a></li>
-<li><a href="#_change_systems_with_data_safely">Change systems with data safely</a></li>
+<li><a href="#_synergetic_data_changes">Synergetic data changes</a></li>
 <li><a href="#_summary">Summary</a></li>
 </ul>
 </div>
@@ -389,11 +405,11 @@ by Gary Klindt
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Open Requirement</dt>
+<dt class="hdlist1">Open Code</dt>
 <dd>
 <p>The functionality of existing code can be extended.</p>
 </dd>
-<dt class="hdlist1">Closed Requirement</dt>
+<dt class="hdlist1">Closed Code</dt>
 <dd>
 <p>Existing code is not supposed to be changed.</p>
 </dd>
@@ -505,7 +521,7 @@ Did you see, how the cyclomatic complexity got reduced?
 <div class="title">Note</div>
 </td>
 <td class="content">
-In physics probe charges are used to determine the field strength of, for example, a magnetic field. The field itself cannot be seen, since it is an abstract concept that just explains phenomena, in the magnetic field example, the velocity of particles, considering high friction. It is tempting to compare the probe requirement with a probe charge. Then we can compare the OCP principle compliance with a field and the resulting velocities with characteristic code changes.
+In physics probe charges are used to determine the field strength of, for example, a magnetic field. The field itself cannot be seen, since it is an abstract concept that just explains phenomena. In the magnetic field example that is the velocity of particles, considering high friction. It is tempting to compare the probe requirement with a probe charge. Then we can compare the OCP principle compliance with a field and the resulting velocities with characteristic code changes, such as non-invasiveness.
 </td>
 </tr>
 </table>
@@ -564,47 +580,92 @@ In physics probe charges are used to determine the field strength of, for exampl
 </div>
 </div>
 <div class="sect1">
-<h2 id="_change_systems_with_data_safely">Change systems with data safely</h2>
+<h2 id="_synergetic_data_changes">Synergetic data changes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Data always has to be thought together with code. Data is created, changed and deleted by running code. Whether the code that manipulates data is OCP compliant or not has no effect on the data. What does it even mean that data is OCP compliant? For this, let&#8217;s try to specialize the general principle <a href="#ocp">Example 1</a> to data.</p>
+<p>Data always has to be thought together with code. Data is created, changed and deleted by running code. Whether the code that manipulates data is OCP compliant or not has no effect on the data itself. What does it even mean that data is OCP compliant? For this, let&#8217;s try to specialize the general principle <a href="#ocp">Example 1</a> to data.</p>
 </div>
-<div class="exampleblock">
-<div class="title">Example 2. OCP for data</div>
-<div class="content">
 <div class="paragraph">
-<p>Datasets should be open for extension, but closed for modification.</p>
+<p>Review the OCP statements.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>A dataset will be said to be open if it is still available for extension. For example, it should be possible to add fields to the data structures it contains, or new elements to the set of functions it performs.</p>
-</li>
-<li>
-<p>A dataset will be said to be closed if it is available for use by other modules. This assumes that the module has been given a well-defined, stable description (the interface in the sense of information hiding).</p>
-</li>
-</ul>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Open Code</dt>
+<dd>
+<p>The functionality of existing code can be extended.</p>
+</dd>
+<dt class="hdlist1">Closed Code</dt>
+<dd>
+<p>Existing code is not supposed to be modified.</p>
+</dd>
+</dl>
 </div>
+<div class="paragraph">
+<p>For data, this might mean the following:</p>
 </div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Open Data</dt>
+<dd>
+<p>The information of existing data can be extended.</p>
+</dd>
+<dt class="hdlist1">Closed Data</dt>
+<dd>
+<p>Existing data is not supposed to be modified.</p>
+</dd>
+</dl>
 </div>
-<div class="ulist">
-<ul>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Schemas can be database schema, explicitly defined schema in a schema registry, or implicitly defined schema by being able to let a piece of code process an instance of that schema without errors. The latter is the most general 'definition'.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>I believe that information is a good analog to functionality, since both represent the business/user perspective of data and code, respectively. We can define information of a data instance as the set of statements that we are able to formulate about the data considering its context. Then the following operations are <strong>Data OCP</strong>, considering that code changes to data schemas are implied.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>It is not the dataset that has such properties, it is the data product: dataset + service that manages that data.Reference to Data Management at Scale.</p>
+<p>Add an optional field is added to an existing data structure with a default. All existing instance of such a data schema get this new information.</p>
 </li>
 <li>
-<p>Versioning: data code must interprete versions, such that dataset can be extended, but the code can differentiate extensions from others.</p>
+<p>Remove an existing field from a schema. That field in existing instance have no meaning anymore.</p>
 </li>
 <li>
-<p>Meta data in general: In addition to version, there might be archive status or a reference to a newer version.</p>
+<p>If data references other data, than its information can be extended by extending the other data schema. Such schema are not part of the schema of the referencing data, because the reference is represented as a key.</p>
 </li>
-<li>
-<p>References: Normalized data can be extended. Othere data can reference data, data can reference other data. If other data changes, more use can be made from this data.</p>
-</li>
-<li>
-<p>Code that interacts with data should have some properties: ignore when data structure suddenly contain more fields.</p>
-</li>
-</ul>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+It came to my mind that the implementation of DSLs are an interesting case for OCP and data. A variant of DSL actually stores the DSL code as data that is interpreted as code. It means that new functionality can be added to a system, without altering existing code at all! DSLs are Code OCP as well as Data OCP, since the new functionality is part of the data context, which potentially increases the information of existing data.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+By defining a meta data schema, that allows to set 'capabilities' to data instances, to dynamically determines their schema, it is possible to add new types, just by adding new data instances that have a new set of capabilities. With such a pattern in place, all the schema extensions that are listed in this section apply to the addition or removal of single data instances instead of just schema.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -618,10 +679,10 @@ In physics probe charges are used to determine the field strength of, for exampl
 <p>Breaking OCP leads to the unsettling situation that changes have to be done at multiple code locations. With feature distributed across many code locations, the probability that unit tests cover each case decreases. This situation is the default! Very often it is possible, though, to first refactor the code with simple refactorings into an OCP compliant state, such that features can be added in a similarly safe way as in <a href="#safe-extension">Listing 4</a>.</p>
 </div>
 <div class="paragraph">
-<p>Practically working with OCP means to to Gedankenexperiments by mentally applying probe requirements. Best those requirements are realistic and even have a chance to be planned. If requirements can be implemented effortlessly, the probability increases significantly that a product manager decides to <em>buy</em> it.</p>
+<p>Practically working with OCP means to to Gedankenexperiments by mentally applying probe requirements. Best those requirements are realistic and even have a chance to be planned during prioritzation. If requirements can be implemented effortlessly, the probability increases significantly that a product manager decides to <em>buy</em> it.</p>
 </div>
 <div class="paragraph">
-<p>For data, the refactoring trick cannot be applied, because once data is flowing around in a system, it cannot easily be changed.</p>
+<p>For data, the refactoring trick cannot be applied, because once data is flowing around in a system, it cannot easily be changed. But information of data can be modified by modifying schemas.</p>
 </div>
 </div>
 </div>

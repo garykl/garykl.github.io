@@ -104,3 +104,19 @@ code {
   border: 1px solid #d3d3d3;
   font-size: 0.9em
 }
+
+dt {
+  float: left;
+  clear: left;
+  text-align: right;
+  font-style: italic;
+  color: #444;
+  font-family:"Open Sans","DejaVu Sans",sans-serif;
+}
+dt::after {
+  content: ":";
+}
+dd {
+  margin: 0 0 0 110px;
+}
+
