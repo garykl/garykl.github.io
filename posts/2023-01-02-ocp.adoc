@@ -1,5 +1,5 @@
 :nofooter:
-:creation-date: 01/02/2024
+:creation-date: 01/22/2024
 :categories: design, clean code, data, principle
 :source-highlighter: rouge
 :rouge-style: monokai
