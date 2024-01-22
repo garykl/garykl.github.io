@@ -105,6 +105,10 @@ code {
   font-size: 0.9em
 }
 
+.quoteblock {
+  background: #d3d3d3
+}
+
 dt {
   float: left;
   clear: left;

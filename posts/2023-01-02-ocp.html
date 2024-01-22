@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.18">
-<title>Open Closed principle on Data</title>
+<title>Unveiling the Open Closed Principle in Data Work</title>
 <style>
 @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";
 
@@ -112,6 +112,10 @@ code {
   padding: 1em;
   border: 1px solid #d3d3d3;
   font-size: 0.9em
+}
+
+.quoteblock {
+  background: #d3d3d3
 }
 
 dt {
@@ -361,30 +365,45 @@ by Gary Klindt
 </div>
 </div>
 <div id="header">
-<h1>Open Closed principle on Data</h1>
+<h1>Unveiling the Open Closed Principle in Data Work</h1>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_motivation_and_from_the_book">Motivation and from the book</a></li>
+<li><a href="#_simplified_ocp_by_the_book">Simplified OCP by the book</a></li>
 <li><a href="#_strategy_against_ocp_violation">Strategy against OCP violation</a></li>
-<li><a href="#_synergetic_data_changes">Synergetic data changes</a></li>
+<li><a href="#_synergetic_data_changes">Synergetic data changes</a>
+<ul class="sectlevel2">
+<li><a href="#_code_is_data">Code is data</a></li>
+<li><a href="#_data_types_are_data">Data types are data</a></li>
+</ul>
+</li>
 <li><a href="#_summary">Summary</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_motivation_and_from_the_book">Motivation and from the book</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Can we learn from <strong>Clean Code</strong> when it comes to working with data? Compared to software, data is flexible. Once there is data in a system, we cannot change it, just by changing code. To change data, code must be created to change it, and the data must be processed by that particular code. We must be very well prepared to cope with changes to data. Coping with changes is one of the specialties of Clean Code. I want to interprete Clean Code practices and principles to data work. One of the very important and confusing principles is the Open Closed principle. So how can code be open as well as closed?! Well, to answer this, we must step back a moment, and ask for the definition.</p>
+<p>Data is not as flexible as software, because data is persisted. Once there is data in a system, we cannot just change it, like we do it for software. To change data, code must be created to change it, and the data must be processed by that particular code. We must be very well prepared to cope with changes to data. This is why backend development is considered hard by some people.</p>
 </div>
 <div class="paragraph">
-<p>The principle was coined by Bertrand Meyer in his book about object oriented programming <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>. The following statements are important to be able to judge, whether the following examples are expressions of the open closed principle, and to be able to make valid analogies when working with data.</p>
+<p>Clean Code shines when it comes to evolvability of code. Specifically the Open Closed principle - often misunderstood - leads to extensible code, without modifying existing code. It is an intriguing question whether we can learn from Clean Code principle for data work.</p>
 </div>
-<div id="ocp" class="exampleblock">
-<div class="title">Example 1. Open Closed principle</div>
-<div class="content">
+<div class="paragraph">
+<p>This post gives the traditional definition of the Open Closed principle, as well as a simplified statement of it. An example for OCP compliant and non-compliant code is provided. Last, but not least, I generalize the principle and apply it to data work, just to derive an intristing insight: Theoretically, we can have black box checks, executed during runtime to find non-cohesive code.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_simplified_ocp_by_the_book">Simplified OCP by the book</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The principle was coined by Bertrand Meyer in his book about object oriented programming <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>. The following statements are important to be able to judge, whether the examples of this pos are expressions of the open closed principle.</p>
+</div>
+<div id="ocp" class="quoteblock">
+<div class="title">Open Closed principle</div>
+<blockquote>
 <div class="paragraph">
 <p>Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.</p>
 </div>
@@ -398,11 +417,13 @@ by Gary Klindt
 </li>
 </ul>
 </div>
-</div>
+</blockquote>
 </div>
 <div class="paragraph">
-<p>Let me try to rephrase:</p>
+<p>To be able to later generize the principle to data, let me try to rephrase:</p>
 </div>
+<div class="quoteblock">
+<blockquote>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Open Code</dt>
@@ -415,6 +436,22 @@ by Gary Klindt
 </dd>
 </dl>
 </div>
+</blockquote>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The rephrased principle is a more strict statement than the original one, such that the following discussion are simplified.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>For our code base as a whole, we would like to add functionality by adding code, instead of altering existing code.</p>
 </div>
@@ -424,13 +461,16 @@ by Gary Klindt
 <h2 id="_strategy_against_ocp_violation">Strategy against OCP violation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There is a <a href="https://clean-code-developer.de">german website</a> that is dedicated to Clean Code. It contains a set of practices and principles, nicely arranged by difficulty to master, and put into relation to few basic qualities, e.g. evolvability. OCP is good at making your code evolvable. The following example is just a slight modifcation of the example of this website, such as translation to english. In this section, there is more explanation about the purpose and properties of OCP.</p>
+<p>There is a <a href="https://clean-code-developer.de">german website</a> that is dedicated to Clean Code. It contains a set of practices and principles, nicely arranged by difficulty to master, and put into relation to few basic qualities, e.g. evolvability. OCP is good at making your code evolvable. The following example is just a slight modifcation of the example of the <a href="https://clean-code-developer.de">Clean Code website</a>, such as translation to english. In this section, there is more explanation about the purpose and properties of OCP.</p>
+</div>
+<div class="paragraph">
+<p>We will have a look at code that is non-compliant to OCP, as well as at code that is comliant to OCP. The compliant variant of the code is just a refactoring step away from the non-compliant code, and therefore expresses the exact same functionality. Then a requirement is presented and both variants are extended by this functionality. We will see, that the OCP compliant code behaves much better under change.</p>
 </div>
 <div class="paragraph">
 <p>First comes the code that is not OCP compliant.</p>
 </div>
 <div id="break-ocp" class="listingblock">
-<div class="title">Listing 1. Code that will break OCP: NoOcp.cs</div>
+<div class="title">Listing 1. Code that will break OCP: NoOcp.cs, see <a href="https://gist.github.com/garykl/117e0805f7bb7e14d42cf3462ff0549f">gist</a>.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="cs"><span class="k">namespace</span> <span class="nn">OcpExample</span><span class="p">;</span>
 
@@ -467,7 +507,7 @@ by Gary Klindt
 <p>The code that is compliant to OCP can be obtained from the previous code sample by applying the refactoring to replace an enumeration by the strategy pattern.</p>
 </div>
 <div id="comply-ocp" class="listingblock">
-<div class="title">Listing 2. Code that will comply to OCP: FollowOcp.cs</div>
+<div class="title">Listing 2. Code that will comply to OCP: FollowOcp.cs, see <a href="https://gist.github.com/garykl/ea4c8f01b031c9bb46cbbb68d75bd9f7">gist</a>.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="cs"><span class="k">namespace</span> <span class="nn">OcpExample</span><span class="p">;</span>
 
@@ -512,7 +552,7 @@ Did you see, how the cyclomatic complexity got reduced?
 <p>Whether code complies to OCP or not shows itself when a new feature is added. Will we write a code block and add it to the code base? The we have OCP compliant code. Of course we can fake this argument, by just copying code, so I assume, we follow the DRY (Don&#8217;t Repeat Yourself) principle sufficiently well.</p>
 </div>
 <div class="paragraph">
-<p>So let&#8217;s test our code with a probe requirement. A probe requirement is a Gedankenexperiment to strengthen the design of our code. Allow a specific type of customer that gets very good pricess, but pay a minimum price in case the do not buy as much as we require them.</p>
+<p>So let&#8217;s test our code with a probe requirement. <em>A probe requirement is a Gedankenexperiment to strengthen the design of our code</em>. Allow a specific type of customer that gets very good pricess, but pay a minimum price in case the do not buy as much as we require them.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -530,7 +570,7 @@ In physics probe charges are used to determine the field strength of, for exampl
 <p>Showing the changed structure of <a href="#break-ocp">Listing 1</a>  gives the following.</p>
 </div>
 <div class="listingblock">
-<div class="title">Listing 3. Code did not follow OCP and needed to be changed invasively: NoOcp.cs</div>
+<div class="title">Listing 3. Code did not follow OCP and needed to be changed invasively: NoOcp.cs, see <a href="https://gist.github.com/garykl/6cc00c113117d1c3a8cf428e3b8369ca">gist</a>.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="cs"><span class="k">enum</span> <span class="n">CustomerType</span> <span class="p">{</span> <span class="n">PartnerCustomer</span><span class="p">,</span> <span class="n">OneTimeCustomer</span><span class="p">,</span> <span class="n">MinimumPriceCustomer</span> <span class="p">}</span>
 
@@ -562,7 +602,7 @@ In physics probe charges are used to determine the field strength of, for exampl
 <p>Better would be, if code would just be added at a single code location, like when extending the functionality of <a href="#comply-ocp">Listing 2</a> as shown as follows:</p>
 </div>
 <div id="safe-extension" class="listingblock">
-<div class="title">Listing 4. Code followed OCP and code be extended safely: FollowOcp.cs</div>
+<div class="title">Listing 4. Code followed OCP and code be extended safely: FollowOcp.cs, see <a href="https://gist.github.com/garykl/3cfe0b7bc0e74b3a22a76421739bd851">gist</a>.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="cs"><span class="k">class</span> <span class="nc">MinimumPriceCustomer</span> <span class="p">:</span> <span class="n">ICustomerPricing</span>
 <span class="p">{</span>
@@ -575,7 +615,10 @@ In physics probe charges are used to determine the field strength of, for exampl
 <p>The cohesion of the existing structures is untouched and the cohesion of the new class is as it should be: High.</p>
 </div>
 <div class="paragraph">
-<p>The probe requirement that we used <strong>cannot</strong> be used to proof that code is OCP compliant. Consider the following probe requirement: Add a discount on the number of articles that are bought. Both, <a href="#break-ocp">Listing 1</a> as well as <a href="#comply-ocp">Listing 2</a> would be needed to change invasively. Generally speaking, code can never be totally OCP compliant, if it actually does something useful. It is probably always possible to invent an addition of functionality such that the corresponding code change is an alteration and not an addition, thus, breaking the Open Closed principle. So choose your probe requirements wisely, and take many of them.</p>
+<p>The probe requirement that we used <strong>cannot</strong> be used to proof that code is OCP compliant. Consider the following probe requirement: Add a discount on the number of articles that are bought. Both, <a href="#break-ocp">Listing 1</a> as well as <a href="#comply-ocp">Listing 2</a> would be needed to change invasively, as opposed to extension without modification. Generally speaking, code can never be totally OCP compliant, if it actually does something useful. It is probably always possible to invent an addition of functionality such that the corresponding code change is an alteration and not an addition, thus, breaking the Open Closed principle. So choose your probe requirements wisely, and take many of them.</p>
+</div>
+<div class="paragraph">
+<p>If it turns out that your code is not compliant to OCP with respect to the current requirement, it is likely possible to refactor it to be adhere to OCP, before you actually start to add new feature. Just recently, a collegue argued that the application of a specific feature flag to the code base is ridiculous, since it would need to be applied to 27 code locations. His situation can be refactored towards an OCP compliant code with respect to the new requirements, though, such that the variability that is introduced by the new feature is located in just one place, and afterwards replacing it by a dependency in the form of an interface. The, the feature flag can be added, even without modifying any existing code.</p>
 </div>
 </div>
 </div>
@@ -583,11 +626,13 @@ In physics probe charges are used to determine the field strength of, for exampl
 <h2 id="_synergetic_data_changes">Synergetic data changes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Data always has to be thought together with code. Data is created, changed and deleted by running code. Whether the code that manipulates data is OCP compliant or not has no effect on the data itself. What does it even mean that data is OCP compliant? For this, let&#8217;s try to specialize the general principle <a href="#ocp">Example 1</a> to data.</p>
+<p>Data always has to be thought together with code. Data is created, changed and deleted by running code. Whether the code that manipulates data is OCP compliant or not has no effect on the data itself. What does it even mean that data is OCP compliant? For this, let&#8217;s try to specialize the general principle <a href="#ocp">Open Closed principle</a> to data.</p>
 </div>
 <div class="paragraph">
 <p>Review the OCP statements.</p>
 </div>
+<div class="quoteblock">
+<blockquote>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Open Code</dt>
@@ -600,9 +645,13 @@ In physics probe charges are used to determine the field strength of, for exampl
 </dd>
 </dl>
 </div>
+</blockquote>
+</div>
 <div class="paragraph">
 <p>For data, this might mean the following:</p>
 </div>
+<div class="quoteblock">
+<blockquote>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Open Data</dt>
@@ -615,20 +664,38 @@ In physics probe charges are used to determine the field strength of, for exampl
 </dd>
 </dl>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-Schemas can be database schema, explicitly defined schema in a schema registry, or implicitly defined schema by being able to let a piece of code process an instance of that schema without errors. The latter is the most general 'definition'.
-</td>
-</tr>
-</table>
+</blockquote>
 </div>
 <div class="paragraph">
-<p>I believe that information is a good analog to functionality, since both represent the business/user perspective of data and code, respectively. We can define information of a data instance as the set of statements that we are able to formulate about the data considering its context. Then the following operations are <strong>Data OCP</strong>, considering that code changes to data schemas are implied.</p>
+<p>Or, to express the analogy in a symbolic language:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="diag-3175b0f13d7bf70901176ee263a80342.png" alt="Diagram" width="437" height="175">
+</div>
+</div>
+<div class="paragraph">
+<p>I believe that information is a good analog to functionality, since both, information and functionality, represent the business/user perspective of data and code, respectively. We can <em>define information of a data instance as the set of statements that we are able to formulate about the data considering its context</em>. The context of data is code that operates on that data, and the data that this code can operate as well.</p>
+</div>
+<div class="sect2">
+<h3 id="_code_is_data">Code is data</h3>
+<div class="paragraph">
+<p>Source code is just data. As soon as code complies to OCP, then its corresponding source code does as well. Language of the scheme and lisp family live that even on a less technical level considering bytes: A source code file ultimately represents a nested list, a data structure that clearly represents data.</p>
+</div>
+<div class="paragraph">
+<p>A slightly less trivial example is an <em>External Domain Specific Language</em>. In this case, data files that are external to interpreter code are used to modfiy functionality. DSL is the ultimate pattern for creating code that is OCP compliant, namely, the interpreter code. Functionality of what the interpreter does can be extended too a wide variety without touching the interpreter itself. But it is not necessarily Data OCP. Of course, if code is data, then the interpreter is data and the DSL is data, and it is clearly Data OCP.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_data_types_are_data">Data types are data</h3>
+<div class="paragraph">
+<p>The word data type can be confusing when talking about it in the context of programming, because types in object oriented programming not only contain fields with data, but can also contain functions. I would like to focus this discussion on data schemas. A schema basically is either a primitive type or a list of fields, each is of a specific schema.</p>
+</div>
+<div class="paragraph">
+<p>Schemas can be database schema, explicitly defined schema in a schema registry, or implicitly defined schema by being able to let a piece of code process an instance of that schema without errors.</p>
+</div>
+<div class="paragraph">
+<p>Then the following operations are <strong>Data OCP</strong>, considering that code changes to data schemas are data changes as well.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -643,17 +710,35 @@ Schemas can be database schema, explicitly defined schema in a schema registry, 
 </li>
 </ol>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-It came to my mind that the implementation of DSLs are an interesting case for OCP and data. A variant of DSL actually stores the DSL code as data that is interpreted as code. It means that new functionality can be added to a system, without altering existing code at all! DSLs are Code OCP as well as Data OCP, since the new functionality is part of the data context, which potentially increases the information of existing data.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>If information originates from the code that runs it, and a data schema is implicitly defined by the code that runs it, then the above statements are almost a tautology. It essentially says that when we change functionality of the code that processes data of a specific type, then the datas information is changed, which is the definition that I gave above.</p>
+</div>
+<div class="paragraph">
+<p>For more abstract/conceptual schema definitions, we have to rely on our subjective interpretation of meaning of data.</p>
+</div>
+<div class="paragraph">
+<p>Reflective/dynamic code is able to cope with arbitrary schemas. Then the functionality of the code depends on the data instances that we feed the code with. This is true for DSLs for example. If there is such reflective code with respect to some data <code>D1</code>, that also consumes other data <code>D2</code>, then the information of the <code>D2</code> is changed. That means, it is the combination of code and how code processes data with other data that determines whether data is Data OCP. It is code that can be classified Data OCP, not the data itself.</p>
+</div>
+<div class="paragraph">
+<p>For example consider the following data structures, formatted in python:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="n">D1</span> <span class="o">=</span> <span class="p">{</span> <span class="s">"key"</span><span class="p">:</span> <span class="s">"a"</span> <span class="p">}</span>
+<span class="n">D2</span> <span class="o">=</span> <span class="p">{</span> <span class="s">"a"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s">"b"</span><span class="p">:</span> <span class="mi">7</span> <span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Are <code>D1</code> and <code>D2</code> Data OCP? Well &#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="k">def</span> <span class="nf">be_ocp</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">d2</span><span class="p">[</span><span class="n">d1</span><span class="p">[</span><span class="s">'key'</span><span class="p">]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Considering the function <code>be_ocp</code> as the context of <code>D1</code> and <code>D2</code>, they are Data OCP, because the information that results (the return value of <code>be_ocp</code>) changes for different <code>D1</code> for the same <code>D2</code>. This example is somewhat trivial, and we might ask the question whether our code is always Data OCP, as soon as we have more than one data structure. I would say that this is not always the case, but good code should fulfill it. If code is not Data OCP, it means that multiple data instances are processed independently from each other, which in turn means that the code under consideration is not very cohesive.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -662,10 +747,11 @@ It came to my mind that the implementation of DSLs are an interesting case for O
 <div class="title">Note</div>
 </td>
 <td class="content">
-By defining a meta data schema, that allows to set 'capabilities' to data instances, to dynamically determines their schema, it is possible to add new types, just by adding new data instances that have a new set of capabilities. With such a pattern in place, all the schema extensions that are listed in this section apply to the addition or removal of single data instances instead of just schema.
+It is even possible to talk about Data OCP in the case of having only a single argument to a function, because the argument usually is a composition of multiple field. The field may be Data OCP compliant with each other or not.
 </td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 </div>
@@ -676,13 +762,13 @@ By defining a meta data schema, that allows to set 'capabilities' to data instan
 <p>The Open Closed principle might help us identifying code that will not survive the drag of time. There are patterns readily available that support the OCP, such as the strategy pattern, or the usage of interfaces to delegate parts of the functionality to other code locations (Dependency Inversion principle). Such patterns contribute to better maintainability by reducing the cyclomatic complexity. The design hardens since code cohesion improves.</p>
 </div>
 <div class="paragraph">
-<p>Breaking OCP leads to the unsettling situation that changes have to be done at multiple code locations. With feature distributed across many code locations, the probability that unit tests cover each case decreases. This situation is the default! Very often it is possible, though, to first refactor the code with simple refactorings into an OCP compliant state, such that features can be added in a similarly safe way as in <a href="#safe-extension">Listing 4</a>.</p>
+<p>Breaking OCP leads to the unsettling situation that changes have to be done at multiple code locations. With feature distributed across many code locations, the probability that unit tests cover each case decreases. This situation is the default in many code bases! Very often it is possible, though, to first refactor the code with simple refactorings into an OCP compliant state, such that features can be added in a similarly safe way as in <a href="#safe-extension">Listing 4</a>.</p>
 </div>
 <div class="paragraph">
-<p>Practically working with OCP means to to Gedankenexperiments by mentally applying probe requirements. Best those requirements are realistic and even have a chance to be planned during prioritzation. If requirements can be implemented effortlessly, the probability increases significantly that a product manager decides to <em>buy</em> it.</p>
+<p>Practically working with OCP means to do Gedankenexperiments by mentally applying probe requirements. Best those requirements are realistic and even have a chance to be planned during prioritzation. If requirements can be implemented effortlessly, the probability increases significantly that a product manager decides to <em>buy</em> it.</p>
 </div>
 <div class="paragraph">
-<p>For data, the refactoring trick cannot be applied, because once data is flowing around in a system, it cannot easily be changed. But information of data can be modified by modifying schemas.</p>
+<p>The OCP interpreation for data is only possible by considering that datas context, which is the precondition for giving it information. Information of data can be modified by modifying schemas, which can be data itself. The data&#8217;s context - code - determines whether data is Data OCP. When we are tempted to call data being Data OCP, we really say that the code is Data OCP. If code is not Data OCP, then it is either a projection, or it is not cohesive.</p>
 </div>
 </div>
 </div>
