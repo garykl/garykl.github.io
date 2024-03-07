@@ -24,6 +24,7 @@ In all three cases, the _Catalogue Pattern_ was used, which I consider a code sm
 
 When collecting data for a telemetry event, there is some data that is present for any telemetry event, irrespective of which functionality we want to collect data for. This can be, for example a user and a subscription identifier. Say, we collect information about a feature, for which it is interesting for product management to know the time duration until something is delivered. Then we might construct the following event `DeliveryEvent` and an interface `IGenericEvent` that represents the data that is independent of the specific feature:
 
+.Concrete event with generic properties
 [source, cs]
 ----
 interface IGenericEvent
@@ -81,6 +82,7 @@ If the code is to be extended by an additional event for a different feature, th
 
 The `EventBuilder` will end up as a catalogue. Consequently, I renamed `EventBuilder` to `EventCatalogue`.
 
+.Extending the builder leads to a catalogue.
 [source, cs]
 ----
 class EventCatalogue
@@ -111,7 +113,8 @@ class EventCatalogue
 To summarize:
 
 [[event-catalogue]]
-[plantuml, target=2024-02-04-event-catalogue.png]
+.Diagram of the event catalogue.
+[plantuml, target=2024-02-04-event-catalogue]
 ----
 skinparam BackgroundColor #D8D3C5
 skinparam ClassBackgroundColor #d3d3d3
@@ -149,6 +152,7 @@ The concept of value types and entities are taken from Domain Driven Design. Ent
 
 A clean design can be obtained by splitting the events by feature specific properties and generic properties.
 
+.Event structure that supports OCP compliant design, conserving immutability.
 [source, cs]
 ----
 interface IEventContent
@@ -199,6 +203,7 @@ class EventBuilder
 
 To summarize:
 
+.Diagram of the OCP compliant tlemetry system.
 [plantuml, target=2024-02-04-event-builder]
 ----
 allow_mixing
@@ -236,6 +241,7 @@ The code in <<ocp-compliant-code>> is compliant to the Open Closed principle and
 
 Another OCP violating example I came across is found in a repository that contains plenty of configuration files in JSON format. In essence, there are two kinds of files, each kind of file stored in its own folder. Say there is one folder that contains declarations of resources, one in each file.
 
+.Resource configuration in JSON format.
 [source, json]
 ----
 {
@@ -246,6 +252,7 @@ Another OCP violating example I came across is found in a repository that contai
 
 The other folder contains structures that reference the resources. Let's call them aggregates.
 
+.Aggregate configuration in JSON format.
 [source, json]
 ----
 {
@@ -262,6 +269,7 @@ The root cause of this problem is, that the Open Closed principle is broken. We 
 
 To comply to the Open Closed Principle, we can remove the resources property from teh aggregates and add a reference from the resources to the aggregates.
 
+.Dependency inversion applied to JSON configuration.
 [source, json]
 ----
 {
@@ -283,7 +291,8 @@ While the term data product is used here, I do not want to connotate a data mesh
  
 For example `ascore` that provides a certain kind of data in a specific form, or `travo` that provides a different kind of data in a different form. Then, there is a central service that is called `dacat`, which represents a data catalogue. It's purpose is to show all data products  that are served from the data services. The naive service interaction might be that the data catalogue calls the data services to query, which data products are available for each.
 
-[plantuml, target=2024-02-04-data-catalogue-naive.png]
+.OCP violoating service structure.
+[plantuml, target=2024-02-04-data-catalogue-naive]
 ----
 skinparam BackgroundColor #D8D3C5
 skinparam ComponentBackgroundColor #d3d3d3
@@ -311,7 +320,8 @@ But it can become a severe problem, if the environment together with its organiz
 
 To cope with that issue, dependency inversion on the service level can be performed. Instead of the data services being called by the data catalogue to obtain data product lists, the data services call the data catalogue, to inform it about their data products. Typically, this is done asynchronously by messaging, which even decouples the system temporarily.
 
-[plantuml, target=2024-02-04-data-catalogue-decentrelized.png]
+.OCP compliant service structure.
+[plantuml, target=2024-02-04-data-catalogue-decentrelized]
 ----
 skinparam BackgroundColor #D8D3C5
 skinparam ComponentBackgroundColor #d3d3d3

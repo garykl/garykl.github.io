@@ -415,6 +415,7 @@ by Gary Klindt
 <p>When collecting data for a telemetry event, there is some data that is present for any telemetry event, irrespective of which functionality we want to collect data for. This can be, for example a user and a subscription identifier. Say, we collect information about a feature, for which it is interesting for product management to know the time duration until something is delivered. Then we might construct the following event <code>DeliveryEvent</code> and an interface <code>IGenericEvent</code> that represents the data that is independent of the specific feature:</p>
 </div>
 <div class="listingblock">
+<div class="title">Listing 1. Concrete event with generic properties</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="cs"><span class="k">interface</span> <span class="nc">IGenericEvent</span>
 <span class="p">{</span>
@@ -436,7 +437,7 @@ by Gary Klindt
 <p>As soon as we want to create such an event, a dependency is needed that can deliver us the generic entries (<code>UserId</code> and <code>SubscriptionId</code>) in addition to the actual feature specific information, <code>DeliveryDuration</code> in this case. It is tempting to create a class as follows:</p>
 </div>
 <div id="ocp-violating-event" class="listingblock">
-<div class="title">Listing 1. OCP violating builder class</div>
+<div class="title">Listing 2. OCP violating builder class</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="cs"><span class="k">interface</span> <span class="nc">IProgramContext</span>
 <span class="p">{</span>
@@ -475,6 +476,7 @@ by Gary Klindt
 <p>The <code>EventBuilder</code> will end up as a catalogue. Consequently, I renamed <code>EventBuilder</code> to <code>EventCatalogue</code>.</p>
 </div>
 <div class="listingblock">
+<div class="title">Listing 3. Extending the builder leads to a catalogue.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="cs"><span class="k">class</span> <span class="nc">EventCatalogue</span>
 <span class="p">{</span>
@@ -506,11 +508,12 @@ by Gary Klindt
 </div>
 <div id="event-catalogue" class="imageblock">
 <div class="content">
-<img src="2024-02-04-event-catalogue.png.png" alt="2024 02 04 event catalogue" width="620" height="406">
+<img src="2024-02-04-event-catalogue.png" alt="2024 02 04 event catalogue" width="620" height="406">
 </div>
+<div class="title">Figure 1. Diagram of the event catalogue.</div>
 </div>
 <div class="paragraph">
-<p>When using the code <a href="#ocp-violating-event">Listing 1</a> as a starting point, it is actually not straightforward, how to refactor the code to avoid the catalogue. One possible solution would be to fill the implementations of <code>IGenericEvent</code> just by the feature specific properties, and use a single method that enriches those events by the <code>UserId</code> and <code>SubscriptionId</code>. That catalogue would be gone, but another principle of good design would be broken. Events are value objects, as opposed to entities, and value objects are expected to be immutable!</p>
+<p>When using the code <a href="#ocp-violating-event">Listing 2</a> as a starting point, it is actually not straightforward, how to refactor the code to avoid the catalogue. One possible solution would be to fill the implementations of <code>IGenericEvent</code> just by the feature specific properties, and use a single method that enriches those events by the <code>UserId</code> and <code>SubscriptionId</code>. That catalogue would be gone, but another principle of good design would be broken. Events are value objects, as opposed to entities, and value objects are expected to be immutable!</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -531,6 +534,7 @@ The concept of value types and entities are taken from Domain Driven Design. Ent
 <p>A clean design can be obtained by splitting the events by feature specific properties and generic properties.</p>
 </div>
 <div class="listingblock">
+<div class="title">Listing 4. Event structure that supports OCP compliant design, conserving immutability.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="cs"><span class="k">interface</span> <span class="nc">IEventContent</span>
 <span class="p">{</span>
@@ -556,7 +560,7 @@ The concept of value types and entities are taken from Domain Driven Design. Ent
 <p>Then, it is possible to provide a tracking service with the dependencies needed for any event.</p>
 </div>
 <div id="ocp-compliant-code" class="listingblock">
-<div class="title">Listing 2. OCP compliant event builder.</div>
+<div class="title">Listing 5. OCP compliant event builder.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="cs"><span class="k">class</span> <span class="nc">EventBuilder</span>
 <span class="p">{</span>
@@ -585,9 +589,10 @@ The concept of value types and entities are taken from Domain Driven Design. Ent
 <div class="content">
 <img src="2024-02-04-event-builder.png" alt="2024 02 04 event builder" width="968" height="289">
 </div>
+<div class="title">Figure 2. Diagram of the OCP compliant tlemetry system.</div>
 </div>
 <div class="paragraph">
-<p>The code in <a href="#ocp-compliant-code">Listing 2</a> is compliant to the Open Closed principle and it also complies to the DRY principle. There is one slightly negative consequence: There is not just one single place in the code base that contains all the events. But: if you list all implementations of <code>IContent</code>, all events are actually listed. This fact can be used to create a program that uses reflection to determine all events, maybe generating some well styled html document, so product managers can get an idea, what they are searching for.</p>
+<p>The code in <a href="#ocp-compliant-code">Listing 5</a> is compliant to the Open Closed principle and it also complies to the DRY principle. There is one slightly negative consequence: There is not just one single place in the code base that contains all the events. But: if you list all implementations of <code>IContent</code>, all events are actually listed. This fact can be used to create a program that uses reflection to determine all events, maybe generating some well styled html document, so product managers can get an idea, what they are searching for.</p>
 </div>
 </div>
 </div>
@@ -599,6 +604,7 @@ The concept of value types and entities are taken from Domain Driven Design. Ent
 <p>Another OCP violating example I came across is found in a repository that contains plenty of configuration files in JSON format. In essence, there are two kinds of files, each kind of file stored in its own folder. Say there is one folder that contains declarations of resources, one in each file.</p>
 </div>
 <div class="listingblock">
+<div class="title">Listing 6. Resource configuration in JSON format.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
   </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AA"</span><span class="p">,</span><span class="w">
@@ -610,6 +616,7 @@ The concept of value types and entities are taken from Domain Driven Design. Ent
 <p>The other folder contains structures that reference the resources. Let&#8217;s call them aggregates.</p>
 </div>
 <div class="listingblock">
+<div class="title">Listing 7. Aggregate configuration in JSON format.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
   </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aggregate-RF"</span><span class="p">,</span><span class="w">
@@ -630,6 +637,7 @@ The concept of value types and entities are taken from Domain Driven Design. Ent
 <p>To comply to the Open Closed Principle, we can remove the resources property from teh aggregates and add a reference from the resources to the aggregates.</p>
 </div>
 <div class="listingblock">
+<div class="title">Listing 8. Dependency inversion applied to JSON configuration.</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
   </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AA"</span><span class="p">,</span><span class="w">
@@ -666,8 +674,9 @@ While the term data product is used here, I do not want to connotate a data mesh
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="2024-02-04-data-catalogue-naive.png.png" alt="2024 02 04 data catalogue naive" width="662" height="337">
+<img src="2024-02-04-data-catalogue-naive.png" alt="2024 02 04 data catalogue naive" width="662" height="337">
 </div>
+<div class="title">Figure 3. OCP violoating service structure.</div>
 </div>
 <div class="paragraph">
 <p>Adding a new data service is a two step process: First implement and deploy the data service, and then make changes to the data catalogue, so it uses the new data service. This is not severe at a first glance, since the addition of a new data service happens rarely.</p>
@@ -680,8 +689,9 @@ While the term data product is used here, I do not want to connotate a data mesh
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="2024-02-04-data-catalogue-decentrelized.png.png" alt="2024 02 04 data catalogue decentrelized" width="720" height="337">
+<img src="2024-02-04-data-catalogue-decentrelized.png" alt="2024 02 04 data catalogue decentrelized" width="720" height="337">
 </div>
+<div class="title">Figure 4. OCP compliant service structure.</div>
 </div>
 <div class="paragraph">
 <p>This variant allows to let several teams to interact technically, without the need for cross team communication, by that tremendously reducing the time to market for new data products. Obviously, this comes at a cost: The meta data about data products is redundantly stored and the communication pattern is a bit more complicated to implement.</p>
