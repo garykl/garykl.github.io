@@ -7,3 +7,7 @@
 
 xref:../posts/2023-01-02-ocp.adoc[Unveiling the Open Closed Principle in Data Work] `[design, clean code, data, principle]`
 
+== 2024, February
+
+xref:../posts/2024-02-04-ocp-anti-pattern.adoc[Catalogue anti-pattern breaks OCP] `[design, clean code, principle, patterns]`
+

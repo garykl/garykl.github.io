@@ -197,7 +197,7 @@ ____
 
 Or, to express the analogy in a symbolic language:
 
-[graphviz]
+[graphviz, target=2023-01-02-equivalence]
 ----
 digraph d {
 bgcolor = "#D8D3C5"

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.18">
+<title>Catalogue anti-pattern breaks OCP</title>
+<style>
+@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";
+
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+
+body {
+  background: rgb(36, 36, 36);
+  font-family: "Noto Serif","DejaVu Serif",serif;
+}
+
+h1, h2, h3, h4, h5, h6, #toctitle,
+.sidebarblock > .content > .title {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+h1 {
+  color: rgba(27, 26, 39, 0.8);
+}
+
+ul {
+  list-style-type: square;
+}
+
+a {
+  color: #614209
+}
+
+.garykl-frame {
+  background: linear-gradient(to bottom, rgb(36, 36, 36), rgb(36, 36, 36));
+}
+
+.categories {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #d3d3d3;
+  background: #444;
+  border-left: 4px solid #c3c3c3;
+  border-right: 4px solid #c3c3c3;
+}
+
+.categories > h3 {
+  color: #d3d3d3;
+}
+
+.category {
+  color: rgb(189, 182, 163)
+}
+
+#header, .garykl-frame {
+  font-family:"Open Sans","DejaVu Sans",sans-serif;
+}
+
+#toc {
+  padding: 1em;
+  border: 2px inset rgb(83, 83, 83);
+}
+
+#toctitle {
+  display: none;
+}
+
+#header, #content, #footnotes {
+  border-left: 4px solid #c3c3c3;
+  border-right: 4px solid #c3c3c3;
+  background: rgb(216, 211, 197)
+}
+
+
+.categories, #header, #footer, #content, #footnotes {
+  width: 70%;
+  max-width: 62.5em;
+  position: relative;
+  padding: .9375em;
+  text-align: justify;
+  margin: 0 auto;
+}
+
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #c3c3c3;margin-bottom:1.25em;padding:1.25em;background:#d3d3d3;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+
+.exampleblock {
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+
+code {
+  font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;
+}
+
+
+.listingblock > .content > pre {
+  padding: 1em;
+  border: 1px solid #d3d3d3;
+  font-size: 0.9em
+}
+
+.quoteblock {
+  background: #d3d3d3
+}
+
+dt {
+  float: left;
+  clear: left;
+  text-align: right;
+  font-style: italic;
+  color: #444;
+  font-family:"Open Sans","DejaVu Sans",sans-serif;
+}
+dt::after {
+  content: ":";
+}
+dd {
+  margin: 0 0 0 110px;
+}
+
+
+</style>
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .cm {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .c1 {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .cp {
+  color: #75715e;
+  font-weight: bold;
+}
+pre.rouge .cs {
+  color: #75715e;
+  font-weight: bold;
+  font-style: italic;
+}
+pre.rouge .err {
+  color: #960050;
+  background-color: #1e0010;
+}
+pre.rouge .gi {
+  color: #ffffff;
+  background-color: #324932;
+}
+pre.rouge .gd {
+  color: #ffffff;
+  background-color: #493131;
+}
+pre.rouge .ge {
+  color: #000000;
+  font-style: italic;
+}
+pre.rouge .gr {
+  color: #aa0000;
+}
+pre.rouge .gt {
+  color: #aa0000;
+}
+pre.rouge .gh {
+  color: #999999;
+}
+pre.rouge .go {
+  color: #888888;
+}
+pre.rouge .gp {
+  color: #555555;
+}
+pre.rouge .gs {
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #aaaaaa;
+}
+pre.rouge .k, pre.rouge .kv {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kc {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kd {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kp {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kr {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kt {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kn {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .ow {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .o {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .mf {
+  color: #ae81ff;
+}
+pre.rouge .mh {
+  color: #ae81ff;
+}
+pre.rouge .il {
+  color: #ae81ff;
+}
+pre.rouge .mi {
+  color: #ae81ff;
+}
+pre.rouge .mo {
+  color: #ae81ff;
+}
+pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
+  color: #ae81ff;
+}
+pre.rouge .se {
+  color: #ae81ff;
+}
+pre.rouge .sa {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .sb {
+  color: #e6db74;
+}
+pre.rouge .sc {
+  color: #e6db74;
+}
+pre.rouge .sd {
+  color: #e6db74;
+}
+pre.rouge .s2 {
+  color: #e6db74;
+}
+pre.rouge .sh {
+  color: #e6db74;
+}
+pre.rouge .si {
+  color: #e6db74;
+}
+pre.rouge .sx {
+  color: #e6db74;
+}
+pre.rouge .sr {
+  color: #e6db74;
+}
+pre.rouge .s1 {
+  color: #e6db74;
+}
+pre.rouge .ss {
+  color: #e6db74;
+}
+pre.rouge .s, pre.rouge .dl {
+  color: #e6db74;
+}
+pre.rouge .na {
+  color: #a6e22e;
+}
+pre.rouge .nc {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .nd {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .ne {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .no {
+  color: #66d9ef;
+}
+pre.rouge .bp {
+  color: #f8f8f2;
+}
+pre.rouge .nb {
+  color: #f8f8f2;
+}
+pre.rouge .ni {
+  color: #f8f8f2;
+}
+pre.rouge .nn {
+  color: #f8f8f2;
+}
+pre.rouge .vc {
+  color: #f8f8f2;
+}
+pre.rouge .vg {
+  color: #f8f8f2;
+}
+pre.rouge .vi {
+  color: #f8f8f2;
+}
+pre.rouge .nv, pre.rouge .vm {
+  color: #f8f8f2;
+}
+pre.rouge .w {
+  color: #f8f8f2;
+}
+pre.rouge .nl {
+  color: #f8f8f2;
+  font-weight: bold;
+}
+pre.rouge .nt {
+  color: #f92672;
+}
+pre.rouge {
+  color: #f8f8f2;
+  background-color: #49483e;
+}
+</style>
+</head>
+<body class="article">
+<div class="garykl-frame">
+<div class="categories">
+<h3>Musings on Software Development</h3>
+Post from February 04, 2024<br>
+Categories: <a href="../categories/design.html" class="category">design</a>,
+<a href="../categories/clean code.html" class="category">clean code</a>,
+<a href="../categories/principle.html" class="category">principle</a>,
+<a href="../categories/patterns.html" class="category">patterns</a><br>
+by Gary Klindt
+</div>
+</div>
+<div id="header">
+<h1>Catalogue anti-pattern breaks OCP</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#telemetry">Generating telemetry events</a>
+<ul class="sectlevel2">
+<li><a href="#_event_catalogue">Event Catalogue</a></li>
+<li><a href="#builder">Scope Variability Split</a></li>
+</ul>
+</li>
+<li><a href="#configuration">List entity configurations into categories</a></li>
+<li><a href="#dacat">Data catalogue</a></li>
+<li><a href="#_summary">Summary</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>While writing my theory blog post about the Open Closed principle <a href="2023-01-02-ocp.html">Unveiling the Open Closed Principle on Data Work</a>, I came across three examples in which the Open Closed principle was broken, and negative consequences were visible.</p>
+</div>
+<div class="paragraph">
+<p>In all three cases, the <em>Catalogue Pattern</em> was used, which I consider a code smell. For each case, I will present</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the instantiation of the catalogue.</p>
+</li>
+<li>
+<p>the negative consequences that we observed in this particular case.</p>
+</li>
+<li>
+<p>how an OCP compliant variant looks like that resolves these consequences.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="telemetry">Generating telemetry events</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_event_catalogue">Event Catalogue</h3>
+<div class="paragraph">
+<p>When collecting data for a telemetry event, there is some data that is present for any telemetry event, irrespective of which functionality we want to collect data for. This can be, for example a user and a subscription identifier. Say, we collect information about a feature, for which it is interesting for product management to know the time duration until something is delivered. Then we might construct the following event <code>DeliveryEvent</code> and an interface <code>IGenericEvent</code> that represents the data that is independent of the specific feature:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cs"><span class="k">interface</span> <span class="nc">IGenericEvent</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Guid</span> <span class="n">UserId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">Guid</span> <span class="n">SubscriptionId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">EventType</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">DeliveryEvent</span> <span class="p">:</span> <span class="n">IGenericEvent</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Guid</span> <span class="n">UserId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">Guid</span> <span class="n">SubscriptionId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">EventType</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">TimeSpan</span> <span class="n">DeliveryDuration</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As soon as we want to create such an event, a dependency is needed that can deliver us the generic entries (<code>UserId</code> and <code>SubscriptionId</code>) in addition to the actual feature specific information, <code>DeliveryDuration</code> in this case. It is tempting to create a class as follows:</p>
+</div>
+<div id="ocp-violating-event" class="listingblock">
+<div class="title">Listing 1. OCP violating builder class</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cs"><span class="k">interface</span> <span class="nc">IProgramContext</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Guid</span> <span class="n">UserId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">Guid</span> <span class="n">SubscriptionId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">EventBuilder</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IProgramContext</span> <span class="n">_programContext</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nf">EventBuilder</span><span class="p">(</span><span class="n">IProgramContext</span> <span class="n">programContext</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">_programContext</span> <span class="p">=</span> <span class="n">programContext</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">DeliveryEvent</span> <span class="nf">TrackDelivery</span><span class="p">(</span><span class="n">TimeSpan</span> <span class="n">deliveryDuration</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">DeliveryEvent</span> <span class="p">{</span>
+            <span class="n">UserId</span> <span class="p">=</span> <span class="n">_programContext</span><span class="p">.</span><span class="n">UserId</span><span class="p">,</span>
+            <span class="n">SubscriptionId</span> <span class="p">=</span> <span class="n">_programContext</span><span class="p">.</span><span class="n">SubscriptionId</span><span class="p">,</span>
+            <span class="n">EventType</span> <span class="p">=</span> <span class="s">"Delivery"</span><span class="p">,</span>
+            <span class="n">DeliveryDuration</span> <span class="p">=</span> <span class="n">deliveryDuration</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This builder is very convenient to use. At the client side, it is a matter of calling a method to create the event needed.</p>
+</div>
+<div class="paragraph">
+<p>If the code is to be extended by an additional event for a different feature, then not only a new class is created that implements <code>GenericEvent</code>, but also a new method is added to the existing class <code>EventBuilder</code>. This extension break the Open Closed principle. To avoid OCP violation, it is also possible to rename <code>EventBuilder</code> to <code>DeliveryEventBuilder</code> and create a new builder class for the new feature event, but this would violate the DRY (Don&#8217;t Repeat Yourself) principle and produces a lot of boilerplate code.</p>
+</div>
+<div class="paragraph">
+<p>The <code>EventBuilder</code> will end up as a catalogue. Consequently, I renamed <code>EventBuilder</code> to <code>EventCatalogue</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cs"><span class="k">class</span> <span class="nc">EventCatalogue</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IProgramContext</span> <span class="n">_programContext</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nf">EventCatalogue</span><span class="p">(</span><span class="n">IProgramContext</span> <span class="n">programContext</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">_programContext</span> <span class="p">=</span> <span class="n">programContext</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">IGenericEvent</span> <span class="nf">GetDelivery</span><span class="p">(</span><span class="n">TimeSpan</span> <span class="n">deliveryDuration</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">DeliveryEvent</span> <span class="p">{</span>
+            <span class="n">UserId</span> <span class="p">=</span> <span class="n">_programContext</span><span class="p">.</span><span class="n">UserId</span><span class="p">,</span>
+            <span class="n">SubscriptionId</span> <span class="p">=</span> <span class="n">_programContext</span><span class="p">.</span><span class="n">SubscriptionId</span><span class="p">,</span>
+            <span class="n">EventType</span> <span class="p">=</span> <span class="s">"Delivery"</span><span class="p">,</span>
+            <span class="n">DeliveryDuration</span> <span class="p">=</span> <span class="n">deliveryDuration</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">IGenericEvent</span> <span class="nf">GetReceived</span><span class="p">()</span> <span class="p">{</span> <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">IGenericEvent</span> <span class="nf">GetOnHold</span><span class="p">()</span> <span class="p">{</span> <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">IGenericEvent</span> <span class="nf">GetSentBack</span><span class="p">()</span> <span class="p">{</span> <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span> <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To summarize:</p>
+</div>
+<div id="event-catalogue" class="imageblock">
+<div class="content">
+<img src="2024-02-04-event-catalogue.png.png" alt="2024 02 04 event catalogue" width="620" height="406">
+</div>
+</div>
+<div class="paragraph">
+<p>When using the code <a href="#ocp-violating-event">Listing 1</a> as a starting point, it is actually not straightforward, how to refactor the code to avoid the catalogue. One possible solution would be to fill the implementations of <code>IGenericEvent</code> just by the feature specific properties, and use a single method that enriches those events by the <code>UserId</code> and <code>SubscriptionId</code>. That catalogue would be gone, but another principle of good design would be broken. Events are value objects, as opposed to entities, and value objects are expected to be immutable!</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The concept of value types and entities are taken from Domain Driven Design. Entities are referred to by an identifier, and instances of value types compare by their content. This is also, why a value type instance is not expected to be changed, since it would compare differntly at different stages during its life cycle.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="builder">Scope Variability Split</h3>
+<div class="paragraph">
+<p>A clean design can be obtained by splitting the events by feature specific properties and generic properties.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cs"><span class="k">interface</span> <span class="nc">IEventContent</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">EventType</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">TelemetryEvent</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Guid</span> <span class="n">UserId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">Guid</span> <span class="n">SubscriptionId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">required</span> <span class="n">IEventContent</span> <span class="n">Content</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">OcpCompliantDeliveryContent</span> <span class="p">:</span> <span class="n">IEventContent</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">TimeSpan</span> <span class="n">DeliveryDuration</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">EventType</span> <span class="p">=&gt;</span> <span class="s">"Delivery"</span><span class="p">;</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, it is possible to provide a tracking service with the dependencies needed for any event.</p>
+</div>
+<div id="ocp-compliant-code" class="listingblock">
+<div class="title">Listing 2. OCP compliant event builder.</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cs"><span class="k">class</span> <span class="nc">EventBuilder</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IProgramContext</span> <span class="n">_programContext</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nf">EventBuilder</span><span class="p">(</span><span class="n">IProgramContext</span> <span class="n">programContext</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">_programContext</span> <span class="p">=</span> <span class="n">programContext</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">TelemetryEvent</span> <span class="n">Build</span><span class="p">&lt;</span><span class="n">TContent</span><span class="p">&gt;(</span><span class="n">TContent</span> <span class="n">evt</span><span class="p">)</span> <span class="k">where</span> <span class="n">TContent</span> <span class="p">:</span> <span class="n">IEventContent</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">TelemetryEvent</span> <span class="p">{</span>
+            <span class="n">UserId</span> <span class="p">=</span> <span class="n">_programContext</span><span class="p">.</span><span class="n">UserId</span><span class="p">,</span>
+            <span class="n">SubscriptionId</span> <span class="p">=</span> <span class="n">_programContext</span><span class="p">.</span><span class="n">SubscriptionId</span><span class="p">,</span>
+            <span class="n">Content</span> <span class="p">=</span> <span class="n">evt</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To summarize:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="2024-02-04-event-builder.png" alt="2024 02 04 event builder" width="968" height="289">
+</div>
+</div>
+<div class="paragraph">
+<p>The code in <a href="#ocp-compliant-code">Listing 2</a> is compliant to the Open Closed principle and it also complies to the DRY principle. There is one slightly negative consequence: There is not just one single place in the code base that contains all the events. But: if you list all implementations of <code>IContent</code>, all events are actually listed. This fact can be used to create a program that uses reflection to determine all events, maybe generating some well styled html document, so product managers can get an idea, what they are searching for.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration">List entity configurations into categories</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Another OCP violating example I came across is found in a repository that contains plenty of configuration files in JSON format. In essence, there are two kinds of files, each kind of file stored in its own folder. Say there is one folder that contains declarations of resources, one in each file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AA"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The first in a row"</span><span class="w">
+</span><span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The other folder contains structures that reference the resources. Let&#8217;s call them aggregates.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aggregate-RF"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AA"</span><span class="p">,</span><span class="w"> </span><span class="s2">"AC"</span><span class="p">,</span><span class="w"> </span><span class="s2">"BT"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Further assume that these configurations live in a repository that has the purpose to provide a self service for vertical product teams. If a vertical team would like to have some resource available in a technical platform, such an aggregate configuration has to be provided that references actual resources. Since the vertical teams are solely interested in bringing the actual resource into the platform, their focus is on declaring the resources themselve, carefully. Furthermore, assume that the configuration of the resources is actually a complicated undertaking, and it is done very rarely.</p>
+</div>
+<div class="paragraph">
+<p>What happens on a regular basis, is that the resources are declared, but not the actual aggregates. Code changes are made by the vertical teams and pull request approvals are done by a horizontal team. Therefore, the turn around time is rather large. After about a day, it is realized that the changes do not have the desired effect. As a response a support channel is used to ask for help. The horizontal team starts debugging into the issue and finds that the resource is not added to any aggregate. Another pull request is created, and after two days the desired change is landed.</p>
+</div>
+<div class="paragraph">
+<p>The root cause of this problem is, that the Open Closed principle is broken. We have to modify the aggregates to get the desired effect, in addition to creating the actual resources.</p>
+</div>
+<div class="paragraph">
+<p>To comply to the Open Closed Principle, we can remove the resources property from teh aggregates and add a reference from the resources to the aggregates.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AA"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The first in a row"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aggregate-RF"</span><span class="w">
+</span><span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By this, analogously to <a href="#builder">Scope Variability Split</a>, a catalogue is removed to adhere to the Open Closed Principle.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="dacat">Data catalogue</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example is a cloud native example, in which several HTTP services interact with each other. There are several services that each represent a data type, which we are going to call data services. A data service can serve data products.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+While the term data product is used here, I do not want to connotate a data mesh architecture. A data product just refers to an instance of a REST resource of a data service.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For example <code>ascore</code> that provides a certain kind of data in a specific form, or <code>travo</code> that provides a different kind of data in a different form. Then, there is a central service that is called <code>dacat</code>, which represents a data catalogue. It&#8217;s purpose is to show all data products  that are served from the data services. The naive service interaction might be that the data catalogue calls the data services to query, which data products are available for each.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="2024-02-04-data-catalogue-naive.png.png" alt="2024 02 04 data catalogue naive" width="662" height="337">
+</div>
+</div>
+<div class="paragraph">
+<p>Adding a new data service is a two step process: First implement and deploy the data service, and then make changes to the data catalogue, so it uses the new data service. This is not severe at a first glance, since the addition of a new data service happens rarely.</p>
+</div>
+<div class="paragraph">
+<p>But it can become a severe problem, if the environment together with its organizational structure evolves. It might happen that the product line that is opened up to customers is a big success. Then, what will happen is, that more data services are going to be developed, and that the data services are devloped in teams that do not maintain the data catalogue. This makes sense, since the data catalogue itself requires engineering skills, but no data science skills. That means, that as soon as a new data service appears, a requirements must be formulated by the implementors to have it registered in the data catalogue. If you&#8217;re living in an organization that complies to the SAFe process, you might need to wait some months until you can go to market after the data service implementations finished.</p>
+</div>
+<div class="paragraph">
+<p>To cope with that issue, dependency inversion on the service level can be performed. Instead of the data services being called by the data catalogue to obtain data product lists, the data services call the data catalogue, to inform it about their data products. Typically, this is done asynchronously by messaging, which even decouples the system temporarily.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="2024-02-04-data-catalogue-decentrelized.png.png" alt="2024 02 04 data catalogue decentrelized" width="720" height="337">
+</div>
+</div>
+<div class="paragraph">
+<p>This variant allows to let several teams to interact technically, without the need for cross team communication, by that tremendously reducing the time to market for new data products. Obviously, this comes at a cost: The meta data about data products is redundantly stored and the communication pattern is a bit more complicated to implement.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the first OCP violating example <a href="#telemetry">Generating telemetry events</a>, a catalogue was removed, to relieve the implementor from the tradeoff with the DRY principle. Code duplication could simply be avoided by splitting a basic datastructure, instead of sharing common dependencies in a catalogue.</p>
+</div>
+<div class="paragraph">
+<p>In the second example <a href="#configuration">List entity configurations into categories</a>, the probability of making additional turnarounds in an environment with long turn around times is reduced by complying to the Open Closed Principle for data. Instead of catalogizing resources the catalogue assignment can be deduced from the resources themselves.</p>
+</div>
+<div class="paragraph">
+<p>The third example <a href="#dacat">Data catalogue</a> shows that huge impacts on development scalability can occur if the Open Closed Principle is not followed on the service level, when multiple components are involved.</p>
+</div>
+<div class="paragraph">
+<p>In short: Breaking OCP does not scale!</p>
+</div>
+</div>
+</div>
+</div>
+<div class="garykl-frame">
+<div class="categories">
+<h3>Musings on Software Development</h3>
+Post from February 04, 2024<br>
+Categories: <a href="../categories/design.html" class="category">design</a>,
+<a href="../categories/clean code.html" class="category">clean code</a>,
+<a href="../categories/principle.html" class="category">principle</a>,
+<a href="../categories/patterns.html" class="category">patterns</a><br>
+by Gary Klindt
+</div>
+</div>
+</body>
+</html>

@@ -1,11 +1,7 @@
 :nofooter:
 :source-highlighter: rouge
 :rouge-style: monokai
-= clean code
-
-== 2024, January
-
-xref:../posts/2023-01-02-ocp.adoc[Unveiling the Open Closed Principle in Data Work] `[design, clean code, data, principle]`
+= patterns
 
 == 2024, February
 
