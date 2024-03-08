@@ -1,0 +1,81 @@
+:nofooter:
+:creation-date: 03/08/2024
+:categories: tooling, haskell, guix
+:source-highlighter: rouge
+:rouge-style: monokai
+:listing-caption: Listing
+:xrefstyle: short
+
+= Trying out guix on ubuntu with haskell
+:toc:
+
+I didn't do Haskell in a while, since I do more mainstream languages at my professional work. The haskell tooling always confused me in the past, though, when cabal is the official package manager, but then everyone was using stack all of a sudden, the GHCup was useful. It was never easy to set up an environment as it is with dotnet or python for example.
+
+But I read something that has let me hope: The deficiencies of cabal from the past concerning dependency hell seem to be fixed. The problem left is that an environment is needed to not clutter the operating system, since Haskell packages depend on native libraries, in general. And this is where guix comes into play.
+
+== Setting up guix
+
+On ubuntu, in a terminal, type
+
+[source, bash]
+> sudo apt update
+> sudo apt install guix
+> guix pull
+
+`guix pull` was important for me, since the initial installation provided version 1.3, that did not contain `guix shell`, but just the obsolete `guix environment`. `guix pull` takes a long time to complete.
+
+It is possible to crate several profiles with `guix`, which can be retrieved by `guix package --list-profiles`, which certainly will prove useful (just to remember: `guix package -i hello -p ~/.config/guix/haskell`), but for now, I'll stick with the so-called current profile, since I'm just experimenting, and it is possible to roll back all modifications that are done by guix.
+
+== Install cabal and GHC
+
+To install cabal, I type `guix install cabal-install`, which can be found by first `guix search cabal`. I had to follow the recommendation in the command output to change the environment variables by
+
+[source, bash]
+----
+hint: Consider setting the necessary environment variables by running:
+
+     GUIX_PROFILE="/home/gary/.guix-profile"
+     . "$GUIX_PROFILE/etc/profile"
+----
+
+and was able to verify with `which cabal` that the installation took place into a profile that did not have previously been showing up with `guix package --list-profiles`, but now does.
+
+I'm realizing that I have an old version of the `ghc` compiler on my system, and it seems that I previously used `ghcup` to install it. I was not able to uninstall these package with `apt`. Great, this is why I need a better solution for haskell development! Let me just delete the folders `~/.ghc` and `~/.ghcup` (am I really doing this?!).
+
+Now, I use cabal to create a new dummy haskell project and run it, by `cabal run`, which gives me the reminder that `ghc` is not available on my system. Thank you! So `guix install ghc`. And it works!
+
+But wait, I'd have expected this to be installed by `guix` automatically. Maybe it wasn't, since it was found on my path. To check that, let me try to roll back the installation of cabal and reinstall it. To rollback, the concept of generations is used. Any modification of the guix environment leads to a new generation.
+
+[source, bash]
+----
+> guix package --list-generations
+
+Generation 1    Mär 08 2024 10:59:24
+  cabal-install 3.6.2.0 out     /gnu/store/qwwhmz0g8nxq8sj181pd4vvfx64f3c1a-cabal-install-3.6.2.0
+
+Generation 2    Mär 08 2024 11:17:09    (current)
+ + ghc  9.2.5   out     /gnu/store/m0rjzlphxl50xhsnh7sga6w4hpi0hs56-ghc-9.2.5
+----
+
+Two roll backs bring me back to no packages anymore.
+
+[source, bach]
+----
+> guix package --roll-back
+switched from generation 2 to 1
+> guix package --roll-back
+The following derivation will be built:
+  /gnu/store/s418j4p738i062m49nl0jafl1j52k2g4-profile.drv
+
+building profile with 0 packages...
+switched from generation 1 to 0
+> guix package -I
+----
+
+The last command lists all packages, and it does not show any output, which is what is to be expected. Then, `guix install cabal-install` again does not install ghc, it doesn't even download `cabal-install` but just switched back to generation 1. That's efficient. So I tried `guix package --roll-back` again, followed by package garbage collection `guix gc`. Then `guix install cabal-install` actually downloaded a lot more stuff than in the initial try, but still, no ghc is available. I am not sure, if this is correct behavior, or if my environment settings may be not correct, yet (since I didn't put anything into configuration files, such as `.bash_profile` or similar), but I am quite satisfied by this structured approach to package management, which is easy to understand.
+
+== Summary
+
+That's already it. It was much less of a headache than I was expecting. The next steps I'm going to investigate are using multiple profiles in `guix` and trying to utilize a way to reuse a base configuration across all environments. The base configuration should contain all standard tools, like editors and cli helpers. Could I even arbitrarily compose multiple base configurations? Let's see.
+
+

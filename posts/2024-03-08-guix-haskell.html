@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.18">
+<title>Trying out guix on ubuntu with haskell</title>
+<style>
+@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";
+
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+
+body {
+  background: rgb(36, 36, 36);
+  font-family: "Noto Serif","DejaVu Serif",serif;
+}
+
+h1, h2, h3, h4, h5, h6, #toctitle,
+.sidebarblock > .content > .title {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+h1 {
+  color: rgba(27, 26, 39, 0.8);
+}
+
+ul {
+  list-style-type: square;
+}
+
+a {
+  color: #614209
+}
+
+.garykl-frame {
+  background: linear-gradient(to bottom, rgb(36, 36, 36), rgb(36, 36, 36));
+}
+
+.categories {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #d3d3d3;
+  background: #444;
+  border-left: 4px solid #c3c3c3;
+  border-right: 4px solid #c3c3c3;
+}
+
+.categories > h3 {
+  color: #d3d3d3;
+}
+
+.category {
+  color: rgb(189, 182, 163)
+}
+
+#header, .garykl-frame {
+  font-family:"Open Sans","DejaVu Sans",sans-serif;
+}
+
+#toc {
+  padding: 1em;
+  border: 2px inset rgb(83, 83, 83);
+}
+
+#toctitle {
+  display: none;
+}
+
+#header, #content, #footnotes {
+  border-left: 4px solid #c3c3c3;
+  border-right: 4px solid #c3c3c3;
+  background: rgb(216, 211, 197)
+}
+
+
+.categories, #header, #footer, #content, #footnotes {
+  width: 70%;
+  max-width: 62.5em;
+  position: relative;
+  padding: .9375em;
+  text-align: justify;
+  margin: 0 auto;
+}
+
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #c3c3c3;margin-bottom:1.25em;padding:1.25em;background:#d3d3d3;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+
+.exampleblock {
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+
+code {
+  font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;
+}
+
+
+.listingblock > .content > pre {
+  padding: 1em;
+  border: 1px solid #d3d3d3;
+  font-size: 0.9em
+}
+
+.quoteblock {
+  background: #d3d3d3
+}
+
+dt {
+  float: left;
+  clear: left;
+  text-align: right;
+  font-style: italic;
+  color: #444;
+  font-family:"Open Sans","DejaVu Sans",sans-serif;
+}
+dt::after {
+  content: ":";
+}
+dd {
+  margin: 0 0 0 110px;
+}
+
+
+</style>
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .cm {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .c1 {
+  color: #75715e;
+  font-style: italic;
+}
+pre.rouge .cp {
+  color: #75715e;
+  font-weight: bold;
+}
+pre.rouge .cs {
+  color: #75715e;
+  font-weight: bold;
+  font-style: italic;
+}
+pre.rouge .err {
+  color: #960050;
+  background-color: #1e0010;
+}
+pre.rouge .gi {
+  color: #ffffff;
+  background-color: #324932;
+}
+pre.rouge .gd {
+  color: #ffffff;
+  background-color: #493131;
+}
+pre.rouge .ge {
+  color: #000000;
+  font-style: italic;
+}
+pre.rouge .gr {
+  color: #aa0000;
+}
+pre.rouge .gt {
+  color: #aa0000;
+}
+pre.rouge .gh {
+  color: #999999;
+}
+pre.rouge .go {
+  color: #888888;
+}
+pre.rouge .gp {
+  color: #555555;
+}
+pre.rouge .gs {
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #aaaaaa;
+}
+pre.rouge .k, pre.rouge .kv {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kc {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kd {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kp {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kr {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kt {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .kn {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .ow {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .o {
+  color: #f92672;
+  font-weight: bold;
+}
+pre.rouge .mf {
+  color: #ae81ff;
+}
+pre.rouge .mh {
+  color: #ae81ff;
+}
+pre.rouge .il {
+  color: #ae81ff;
+}
+pre.rouge .mi {
+  color: #ae81ff;
+}
+pre.rouge .mo {
+  color: #ae81ff;
+}
+pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
+  color: #ae81ff;
+}
+pre.rouge .se {
+  color: #ae81ff;
+}
+pre.rouge .sa {
+  color: #66d9ef;
+  font-weight: bold;
+}
+pre.rouge .sb {
+  color: #e6db74;
+}
+pre.rouge .sc {
+  color: #e6db74;
+}
+pre.rouge .sd {
+  color: #e6db74;
+}
+pre.rouge .s2 {
+  color: #e6db74;
+}
+pre.rouge .sh {
+  color: #e6db74;
+}
+pre.rouge .si {
+  color: #e6db74;
+}
+pre.rouge .sx {
+  color: #e6db74;
+}
+pre.rouge .sr {
+  color: #e6db74;
+}
+pre.rouge .s1 {
+  color: #e6db74;
+}
+pre.rouge .ss {
+  color: #e6db74;
+}
+pre.rouge .s, pre.rouge .dl {
+  color: #e6db74;
+}
+pre.rouge .na {
+  color: #a6e22e;
+}
+pre.rouge .nc {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .nd {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .ne {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #a6e22e;
+  font-weight: bold;
+}
+pre.rouge .no {
+  color: #66d9ef;
+}
+pre.rouge .bp {
+  color: #f8f8f2;
+}
+pre.rouge .nb {
+  color: #f8f8f2;
+}
+pre.rouge .ni {
+  color: #f8f8f2;
+}
+pre.rouge .nn {
+  color: #f8f8f2;
+}
+pre.rouge .vc {
+  color: #f8f8f2;
+}
+pre.rouge .vg {
+  color: #f8f8f2;
+}
+pre.rouge .vi {
+  color: #f8f8f2;
+}
+pre.rouge .nv, pre.rouge .vm {
+  color: #f8f8f2;
+}
+pre.rouge .w {
+  color: #f8f8f2;
+}
+pre.rouge .nl {
+  color: #f8f8f2;
+  font-weight: bold;
+}
+pre.rouge .nt {
+  color: #f92672;
+}
+pre.rouge {
+  color: #f8f8f2;
+  background-color: #49483e;
+}
+</style>
+</head>
+<body class="article">
+<div class="garykl-frame">
+<div class="categories">
+<h3>Musings on Software Development</h3>
+Post from March 08, 2024<br>
+Categories: <a href="../categories/tooling.html" class="category">tooling</a>,
+<a href="../categories/haskell.html" class="category">haskell</a>,
+<a href="../categories/guix.html" class="category">guix</a><br>
+by Gary Klindt
+</div>
+</div>
+<div id="header">
+<h1>Trying out guix on ubuntu with haskell</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_setting_up_guix">Setting up guix</a></li>
+<li><a href="#_install_cabal_and_ghc">Install cabal and GHC</a></li>
+<li><a href="#_summary">Summary</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>I didn&#8217;t do Haskell in a while, since I do more mainstream languages at my professional work. The haskell tooling always confused me in the past, though, when cabal is the official package manager, but then everyone was using stack all of a sudden, the GHCup was useful. It was never easy to set up an environment as it is with dotnet or python for example.</p>
+</div>
+<div class="paragraph">
+<p>But I read something that has let me hope: The deficiencies of cabal from the past concerning dependency hell seem to be fixed. The problem left is that an environment is needed to not clutter the operating system, since Haskell packages depend on native libraries, in general. And this is where guix comes into play.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setting_up_guix">Setting up guix</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>On ubuntu, in a terminal, type</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="o">&gt;</span> <span class="nb">sudo </span>apt update
+<span class="o">&gt;</span> <span class="nb">sudo </span>apt <span class="nb">install </span>guix
+<span class="o">&gt;</span> guix pull</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>guix pull</code> was important for me, since the initial installation provided version 1.3, that did not contain <code>guix shell</code>, but just the obsolete <code>guix environment</code>. <code>guix pull</code> takes a long time to complete.</p>
+</div>
+<div class="paragraph">
+<p>It is possible to crate several profiles with <code>guix</code>, which can be retrieved by <code>guix package --list-profiles</code>, which certainly will prove useful (just to remember: <code>guix package -i hello -p ~/.config/guix/haskell</code>), but for now, I&#8217;ll stick with the so-called current profile, since I&#8217;m just experimenting, and it is possible to roll back all modifications that are done by guix.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_install_cabal_and_ghc">Install cabal and GHC</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To install cabal, I type <code>guix install cabal-install</code>, which can be found by first <code>guix search cabal</code>. I had to follow the recommendation in the command output to change the environment variables by</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">hint: Consider setting the necessary environment variables by running:
+
+     <span class="nv">GUIX_PROFILE</span><span class="o">=</span><span class="s2">"/home/gary/.guix-profile"</span>
+     <span class="nb">.</span> <span class="s2">"</span><span class="nv">$GUIX_PROFILE</span><span class="s2">/etc/profile"</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and was able to verify with <code>which cabal</code> that the installation took place into a profile that did not have previously been showing up with <code>guix package --list-profiles</code>, but now does.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;m realizing that I have an old version of the <code>ghc</code> compiler on my system, and it seems that I previously used <code>ghcup</code> to install it. I was not able to uninstall these package with <code>apt</code>. Great, this is why I need a better solution for haskell development! Let me just delete the folders <code>~/.ghc</code> and <code>~/.ghcup</code> (am I really doing this?!).</p>
+</div>
+<div class="paragraph">
+<p>Now, I use cabal to create a new dummy haskell project and run it, by <code>cabal run</code>, which gives me the reminder that <code>ghc</code> is not available on my system. Thank you! So <code>guix install ghc</code>. And it works!</p>
+</div>
+<div class="paragraph">
+<p>But wait, I&#8217;d have expected this to be installed by <code>guix</code> automatically. Maybe it wasn&#8217;t, since it was found on my path. To check that, let me try to roll back the installation of cabal and reinstall it. To rollback, the concept of generations is used. Any modification of the guix environment leads to a new generation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="o">&gt;</span> guix package <span class="nt">--list-generations</span>
+
+Generation 1    Mär 08 2024 10:59:24
+  cabal-install 3.6.2.0 out     /gnu/store/qwwhmz0g8nxq8sj181pd4vvfx64f3c1a-cabal-install-3.6.2.0
+
+Generation 2    Mär 08 2024 11:17:09    <span class="o">(</span>current<span class="o">)</span>
+ + ghc  9.2.5   out     /gnu/store/m0rjzlphxl50xhsnh7sga6w4hpi0hs56-ghc-9.2.5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Two roll backs bring me back to no packages anymore.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bach">&gt; guix package --roll-back
+switched from generation 2 to 1
+&gt; guix package --roll-back
+The following derivation will be built:
+  /gnu/store/s418j4p738i062m49nl0jafl1j52k2g4-profile.drv
+
+building profile with 0 packages...
+switched from generation 1 to 0
+&gt; guix package -I</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The last command lists all packages, and it does not show any output, which is what is to be expected. Then, <code>guix install cabal-install</code> again does not install ghc, it doesn&#8217;t even download <code>cabal-install</code> but just switched back to generation 1. That&#8217;s efficient. So I tried <code>guix package --roll-back</code> again, followed by package garbage collection <code>guix gc</code>. Then <code>guix install cabal-install</code> actually downloaded a lot more stuff than in the initial try, but still, no ghc is available. I am not sure, if this is correct behavior, or if my environment settings may be not correct, yet (since I didn&#8217;t put anything into configuration files, such as <code>.bash_profile</code> or similar), but I am quite satisfied by this structured approach to package management, which is easy to understand.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>That&#8217;s already it. It was much less of a headache than I was expecting. The next steps I&#8217;m going to investigate are using multiple profiles in <code>guix</code> and trying to utilize a way to reuse a base configuration across all environments. The base configuration should contain all standard tools, like editors and cli helpers. Could I even arbitrarily compose multiple base configurations? Let&#8217;s see.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="garykl-frame">
+<div class="categories">
+<h3>Musings on Software Development</h3>
+Post from March 08, 2024<br>
+Categories: <a href="../categories/tooling.html" class="category">tooling</a>,
+<a href="../categories/haskell.html" class="category">haskell</a>,
+<a href="../categories/guix.html" class="category">guix</a><br>
+by Gary Klindt
+</div>
+</div>
+</body>
+</html>

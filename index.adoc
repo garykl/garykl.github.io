@@ -11,3 +11,7 @@ xref:./posts/2023-01-02-ocp.adoc[Unveiling the Open Closed Principle in Data Wor
 
 xref:./posts/2024-02-04-ocp-anti-pattern.adoc[Catalogue anti-pattern breaks OCP] `[design, clean code, principle, patterns, organization]`
 
+== 2024, March
+
+xref:./posts/2024-03-08-guix-haskell.adoc[Trying out guix on ubuntu with haskell] `[tooling, haskell, guix]`
+
