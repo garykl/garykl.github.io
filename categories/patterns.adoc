@@ -3,7 +3,7 @@
 :rouge-style: monokai
 = patterns
 
-== 2024, February
+== 2024 / Q1
 
 xref:../posts/2024-02-04-ocp-anti-pattern.adoc[Catalogue anti-pattern breaks OCP] `[design, clean code, principle, patterns, organization]`
 

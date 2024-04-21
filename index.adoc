@@ -3,15 +3,15 @@
 :rouge-style: monokai
 = Available posts
 
-== 2024, January
+== 2024 / Q2
 
-xref:./posts/2023-01-02-ocp.adoc[Unveiling the Open Closed Principle in Data Work] `[design, clean code, data, principle]`
+xref:./posts/2024-04-20-procrastination.adoc[The ecology of the monkey mind] `[self, systems]`
 
-== 2024, February
+xref:./posts/2024-03-08-guix-haskell.adoc[Trying out guix on ubuntu with haskell] `[tooling, haskell, guix]`
+
+== 2024 / Q1
 
 xref:./posts/2024-02-04-ocp-anti-pattern.adoc[Catalogue anti-pattern breaks OCP] `[design, clean code, principle, patterns, organization]`
 
-== 2024, March
-
-xref:./posts/2024-03-08-guix-haskell.adoc[Trying out guix on ubuntu with haskell] `[tooling, haskell, guix]`
+xref:./posts/2023-01-02-ocp.adoc[Unveiling the Open Closed Principle in Data Work] `[design, clean code, data, principle]`
 

@@ -120,12 +120,12 @@ def write_plain_docinfo(filename: str, categories: Iterable[str], is_in_root: bo
 
 
 def format_date(date: datetime) -> str:
-    return date.strftime('%Y, %B')
+    return f'{date.strftime("%Y")} / Q{date.month // 3 + 1}'
 
 
 def write_adoc_list_file(filename: str, title: str, input_files: Iterable[AdocFile], is_in_root: bool):
 
-    sorted_files = sorted(input_files, key=lambda file: file.creation_date)
+    sorted_files = sorted(input_files, key=lambda file: -file.creation_date.timestamp())
     with open(filename, 'w') as handle:
         handle.write(':nofooter:\n')
         handle.write(':source-highlighter: rouge\n')

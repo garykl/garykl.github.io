@@ -1,0 +1,9 @@
+:nofooter:
+:source-highlighter: rouge
+:rouge-style: monokai
+= systems
+
+== 2024 / Q2
+
+xref:../posts/2024-04-20-procrastination.adoc[The ecology of the monkey mind] `[self, systems]`
+

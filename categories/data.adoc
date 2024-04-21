@@ -3,7 +3,7 @@
 :rouge-style: monokai
 = data
 
-== 2024, January
+== 2024 / Q1
 
 xref:../posts/2023-01-02-ocp.adoc[Unveiling the Open Closed Principle in Data Work] `[design, clean code, data, principle]`
 

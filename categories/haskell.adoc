@@ -3,7 +3,7 @@
 :rouge-style: monokai
 = haskell
 
-== 2024, March
+== 2024 / Q2
 
 xref:../posts/2024-03-08-guix-haskell.adoc[Trying out guix on ubuntu with haskell] `[tooling, haskell, guix]`
 

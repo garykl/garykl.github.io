@@ -1,0 +1,93 @@
+:nofooter:
+:creation-date: 04/20/2024
+:categories: self, systems
+:source-highlighter: rouge
+:rouge-style: monokai
+:listing-caption: Listing
+:xrefstyle: short
+
+= The ecology of the monkey mind
+:toc:
+
+== Procrastination is unfocussed attention
+
+Monkey mind is a term sometimes used in the context of meditation. It expresses an unfocussed state of the mind, in which arbitrary stimuli get immediate attraction of our attention, be it perceptions of the sensical environment, or just past experiences. It is completely normal to have a monkey mind every now and then. The amount of monkey mind in relation to non-monky mind also varies with time and depends a lot on our personal well being.
+
+Meditation is a method to get in control of the monkey mind. In the beginning of the meditation practice, the mind tends to wander. It sometimes wanders so much, that the mind actually forgets to meditate, and instead, the mind just remembers some past situation, for example. Then you know, that your monkey mind is active.
+
+There is also a monkey mind on a larger time scale. It's called procrastination projects. How and why should we control that one?
+
+== Systems thinking of procrastination
+
+The allure of instant gratification often leads to procrastination. It is the act of focusing on unimportant tasks, delaying progress on what truly matters. If we're conscious about our private and professional goals, this means that procrastination hinders us in fulfilling our personal goals, since we do not invest as much time as we could in them.
+
+Procrastination can lead us to explore different thought patterns compared to when we're actively focused on a goal oriented task. When these new, divergent thoughts, that are developed during procrastination, collide with our usual, goal oriented thinking, the spark of creativity can ignite. One aspect of creativity involves exploring variations within a concept and evaluating how these changes affect its behavior.
+
+To implement the new concepts generated in real life can only be done by pure effort, of by convincing others. These are intrinsically motivated goals!
+
+To summarize: Procrastination leads to intrinsically motivated goals.
+
+Having goals, especially intrinsically motivated ones, is the precondition for being able to formulate a personal strategy. Caveat: Too much procrastination leads to many goals - or maybe more like ideas - that are never reached. Is there something like 'not enough procrastination'? Aren't hobbies similar to procrastination?
+
+[[proc-sys]]
+.Systems view of procrastination puts a positive light on it.
+[graphviz, target=2024-04-20-ecology]
+----
+digraph d {
+
+rankdir=LR;
+layout=sfdp;
+overlap=false;
+bgcolor = "#D8D3C5"
+
+node [fillcolor="#d3d3d3" style="filled,rounded" shape=box]
+
+Procrastination -> Creativity [label="+"]
+Creativity -> Goals [label="+"]
+Procrastination -> Goals[label="-"]
+Environment -> Goals[label="+"]
+
+}
+----
+
+<<proc-sys>> summarizes this section diagrammatically.
+
+
+== Example procrastination project
+
+Usually, I read a lot, specifically books about software engineering. Partially, I do this to establish myself in the role of a System Architect in my company. Another goal I have is to create a digital identity. Writing posts is the vehicle for that to me.
+
+Both of my goals, I paused, just to be able to do some programming with my programming language of choice (haskell). So I created a TUI tool for manageing my TODOs, and implementing my very personal workflows. This project was not meant to bring me forward in any of my stated goals, but still, after investing some weeks, it still feels good. I was reflecting very deeply on my self management workflow, as well as on fundamental programming and design principles, such as state managements and user experience.
+
+[[example]]
+.A procrastination system example. Environment is not shown.
+[graphviz, target=2024-04-20-example]
+----
+digraph d {
+
+rankdir=LR;
+layout=sfdp;
+overlap=false;
+bgcolor = "#D8D3C5"
+
+node [fillcolor="#d3d3d3" style="filled,rounded" shape=box]
+
+"Haskell project" -> Procrastination [arrowhead="empty"]
+"Post ideas" -> Creativity [arrowhead="empty"]
+"Digital identity" -> Goals [arrowhead="empty"]
+#"Other goal" -> Goals [arrowhead="empty"]
+#"AI catches you" -> Environment [arrowhead="empty"]
+
+"Haskell project" -> "Post ideas" [label="+"]
+"Post ideas" -> "Digital identity" [label="+"]
+"Haskell project" -> "Digital identity"[label="-"]
+#"AI catches you" -> "Other goal"[label="+"]
+
+}
+----
+
+<<example>> shows how my procrastination project has the potential to boost the 'digital identity' goal I have. What is not shown is, that there might be other influences that can give me ideas for more blog post or other ways to be digitally more present. Also not shown is how the environment acts. Other goals can get more attraction when not doing the procrastination, for example.
+
+== Procrastination is good
+
+Meditation is not about supressing the monkey mind. It is more about letting it come, to be able to release it again, consciously. Maybe, we should welcome procrastination in the same way. Procrastination lets you explore new thought pattern that can spark your creativity in other parts of your life, and it can foster the generation of intrinsic goals. Be careful, though, and keep the balance.
